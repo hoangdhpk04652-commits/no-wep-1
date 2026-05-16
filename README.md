@@ -304,3 +304,123 @@
     </script>
 </body>
 </html>
+
+
+<main>
+     <h1>Welcome to my Form</h1>
+     <form id="form">
+       <div class="input__container">
+         <label for="name">Name</label>
+           <!-- The 'required' prop ensures a filled field before submission -->
+         <input type="text" id="name" name="name" required />
+       </div>
+       <div class="input__container">
+         <label for="email">Email</label>
+         <input type="email" id="email" name="email" required />
+       </div>
+       <div class="input__container">
+         <label for="message">Message</label>
+         <textarea id="message" name="message" rows="4" required></textarea>
+       </div>
+       <button>Submit</button>
+     </form>
+</main>
+
+* {
+ margin: 0;
+ padding: 0;
+ box-sizing: border-box;
+}
+
+html {
+ font-size: 62.5%;
+}
+
+body {
+ font-family: "Mulish", sans-serif;
+ height: 100vh;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+}
+
+main {
+ width: 40rem;
+ box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.2);
+ margin: 0 auto;
+ height: 45rem;
+ border-radius: 2rem;
+ padding: 2rem;
+}
+
+h1 {
+ text-align: center;
+ font-size: 3rem;
+ padding: 1rem 2rem;
+}
+
+form {
+ margin: 3rem 0;
+ display: flex;
+ flex-direction: column;
+ row-gap: 2rem;
+}
+
+.input__container {
+ display: flex;
+ flex-direction: column;
+ row-gap: 0.5rem;
+}
+
+.input__container label { font-size: 1.6rem; }
+
+.input__container input,
+textarea {
+ padding: 1rem 2rem;
+ border-radius: 5px;
+ border: 1px solid #555;
+ resize: none;
+}
+
+button {
+ align-self: flex-start;
+ padding: 1rem 2rem;
+ border-radius: 5px;
+ border: none;
+ background: #333;
+ color: #fff;
+ cursor: pointer;
+}
+
+<script>
+ "use strict";
+    const form = document.getElementById("form");
+</script>
+
+form.addEventListener("submit", function (event) { });
+form.addEventListener("submit", function (event) {
+    // Prevent page reload on submit
+    event.preventDefault(); 
+    // Selecting the email value filled by the user
+    const email = document.getElementById("email").value;
+});
+
+form.addEventListener("submit", function (event) {
+    // Preventing page reload on submit
+    event.preventDefault(); 
+
+  // Selecting the email value filled by the user
+    const email = document.getElementById("email").value;
+
+  // Checking for valid email using a simple regex pattern
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+ if (!emailPattern.test(email)) {
+      alert("Wrong email format");
+      return;
+    }
+
+  // If everything passes, show success message
+    alert("Form submitted successfully");
+});
+
