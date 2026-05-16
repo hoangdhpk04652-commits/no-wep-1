@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+   <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -18,7 +18,7 @@
             --text-color: #333;
         }
 
-        body {
+  body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
@@ -27,7 +27,7 @@
             line-height: 1.6;
         }
 
-        header {
+ header {
             background-color: var(--primary-color);
             color: white;
             padding: 20px 0;
@@ -35,26 +35,26 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
-        header h1 {
+ header h1 {
             margin: 0;
             font-size: 24px;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        header p {
+ header p {
             margin: 5px 0 0 0;
             opacity: 0.8;
             font-size: 14px;
         }
 
-        .container {
+  .container {
             max-width: 1100px;
             margin: 30px auto;
             padding: 0 20px;
         }
 
-        .card {
+  .card {
             background-color: var(--card-bg);
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
@@ -63,7 +63,7 @@
             border-left: 5px solid var(--secondary-color);
         }
 
-        .card-title {
+  .card-title {
             margin-top: 0;
             color: var(--primary-color);
             border-bottom: 2px solid #eee;
@@ -74,7 +74,7 @@
             justify-content: space-between;
         }
 
-        .badge {
+  .badge {
             background-color: var(--secondary-color);
             color: white;
             font-size: 12px;
@@ -82,55 +82,55 @@
             border-radius: 4px;
         }
 
-        /* Styles cho bảng dữ liệu */
+ /* Styles cho bảng dữ liệu */
         .table-responsive {
             overflow-x: auto;
             margin: 15px 0;
         }
 
-        table {
+ table {
             width: 100%;
             border-collapse: collapse;
             margin: 10px 0;
             font-size: 14px;
         }
 
-        th, td {
+  th, td {
             padding: 10px 12px;
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
 
-        th {
+ th {
             background-color: #f2f2f2;
             color: var(--primary-color);
             font-weight: 600;
         }
 
-        tr:hover {
+  tr:hover {
             background-color: #f9f9f9;
         }
 
-        .grid-2 {
+ .grid-2 {
             display: grid;
             grid-template-columns: repeat(auto-fit, min-width: 450px);
             gap: 20px;
         }
 
-        @media (max-width: 600px) {
+  @media (max-width: 600px) {
             .grid-2 {
                 grid-template-columns: 1fr;
             }
         }
 
-        .chart-container {
+  .chart-container {
             position: relative;
             margin: auto;
             height: 280px;
             width: 100%;
         }
 
-        /* Thống kê nhanh */
+   /* Thống kê nhanh */
         .stat-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -138,7 +138,7 @@
             margin: 15px 0;
         }
 
-        .stat-box {
+ .stat-box {
             background: #fdfdfd;
             border: 1px solid #e2e8f0;
             border-radius: 6px;
@@ -146,26 +146,26 @@
             text-align: center;
         }
 
-        .stat-val {
+   .stat-val {
             font-size: 22px;
             font-weight: bold;
             color: var(--secondary-color);
         }
 
-        .stat-lbl {
+ .stat-lbl {
             font-size: 12px;
             color: #718096;
             text-transform: uppercase;
         }
 
-        /* Sơ đồ SVG */
+   /* Sơ đồ SVG */
         .flowchart-container {
             text-align: center;
             margin: 20px 0;
             overflow-x: auto;
         }
 
-        .btn-action {
+  .btn-action {
             background-color: var(--success-color);
             color: white;
             border: none;
@@ -177,11 +177,11 @@
             font-weight: bold;
         }
 
-        .btn-action:hover {
+ .btn-action:hover {
             background-color: #27ae60;
         }
 
-        .highlight-box {
+   .highlight-box {
             background-color: #f0f7ff;
             border: 1px dashed #3498db;
             padding: 15px;
@@ -193,21 +193,20 @@
 </head>
 <body>
 
-    <header>
+ <header>
         <h1>Hệ Thống Xử Lý & Khám Phá Dữ Liệu Tự Động</h1>
         <p>Môn học: ITA106 | Ứng dụng giải quyết trọn gói Bài 1, 2, 3, 4</p>
     </header>
 
-    <div class="container">
-
-        <!-- BÀI 1 -->
+ <div class="container">
+     <!-- BÀI 1 -->
         <div class="card">
             <div class="card-title">
                 <span>Bài 1: Khám Phá Dữ Liệu Ban Đầu</span>
                 <span class="badge">2 Điểm</span>
             </div>
             
-            <p><strong>Khảo sát tổng quan tập dữ liệu mẫu (Gồm thông tin Diện tích, Giá nhà và Loại hình):</strong></p>
+ <p><strong>Khảo sát tổng quan tập dữ liệu mẫu (Gồm thông tin Diện tích, Giá nhà và Loại hình):</strong></p>
             <div class="stat-grid">
                 <div class="stat-box">
                     <div class="stat-val" id="total-rows">15</div>
@@ -225,7 +224,7 @@
                 </div>
             </div>
 
-            <h4>Hiển thị 10 dòng dữ liệu đầu tiên:</h4>
+  <h4>Hiển thị 10 dòng dữ liệu đầu tiên:</h4>
             <div class="table-responsive">
                 <table id="table-raw-10">
                     <thead>
@@ -242,7 +241,7 @@
                 </table>
             </div>
 
-            <h4>Tính toán các thông số thống kê cơ bản (Thuộc tính số):</h4>
+ <h4>Tính toán các thông số thống kê cơ bản (Thuộc tính số):</h4>
             <div class="table-responsive">
                 <table>
                     <thead>
@@ -273,7 +272,7 @@
                 </table>
             </div>
 
-            <h4>Trực quan hóa dữ liệu ban đầu:</h4>
+  <h4>Trực quan hóa dữ liệu ban đầu:</h4>
             <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px;">
                 <div style="flex: 1; min-width: 300px;">
                     <p style="text-align:center; font-weight:bold;">Histogram: Phân phối Tần suất Diện tích (Area)</p>
@@ -289,25 +288,24 @@
                 </div>
             </div>
         </div>
-
-        <!-- BÀI 2 -->
+  <!-- BÀI 2 -->
         <div class="card" style="border-left-color: var(--success-color);">
             <div class="card-title">
                 <span>Bài 2: Làm Sạch Dữ Liệu</span>
                 <span class="badge" style="background-color: var(--success-color);">2 Điểm</span>
             </div>
             
-            <p>Hệ thống tự động quét phát hiện trạng thái dữ liệu thô ban đầu:</p>
+  <p>Hệ thống tự động quét phát hiện trạng thái dữ liệu thô ban đầu:</p>
             <ul>
                 <li>Dữ liệu bị thiếu (Missing Values): Phát hiện ô trống tại cột <strong>Price</strong> ở dòng 6.</li>
                 <li>Dữ liệu trùng lặp (Duplicate Records): Phát hiện bản ghi dòng 13 trùng lặp hoàn toàn với dòng 2.</li>
             </ul>
 
-            <div style="margin: 15px 0;">
+  <div style="margin: 15px 0;">
                 <button class="btn-action" onclick="cleanAndProcessData()">Kích hoạt xử lý làm sạch dữ liệu</button>
             </div>
 
-            <div id="cleaning-result-area" style="display:none;">
+ <div id="cleaning-result-area" style="display:none;">
                 <div class="highlight-box">
                     <strong>Hành động đã thực hiện:</strong><br>
                     1. Điền giá trị <strong>Trung vị (Median)</strong> vào ô dữ liệu trống của cột Price.<br>
@@ -315,21 +313,20 @@
                     3. Áp dụng kỹ thuật <strong>Standardization (Chuẩn hóa Z-score)</strong> đưa dữ liệu số về trung bình = 0, độ lệch chuẩn = 1.
                 </div>
 
-                <h4 style="margin-top:20px;">Biểu đồ So sánh Boxplot Trước và Sau khi làm sạch (Thuộc tính Price):</h4>
+ <h4 style="margin-top:20px;">Biểu đồ So sánh Boxplot Trước và Sau khi làm sạch (Thuộc tính Price):</h4>
                 <div class="chart-container" style="height: 320px;">
                     <canvas id="chart-boxplot-clean"></canvas>
                 </div>
             </div>
         </div>
-
-        <!-- BÀI 3 -->
+ <!-- BÀI 3 -->
         <div class="card" style="border-left-color: var(--warning-color);">
             <div class="card-title">
                 <span>Bài 3: Phát Hiện Outliers (Dữ Liệu Bất Thường)</span>
                 <span class="badge" style="background-color: var(--warning-color);">2 Điểm</span>
             </div>
             
-            <p>Phân tích dữ liệu bất thường bằng thuật toán toán học tiên tiến:</p>
+  <p>Phân tích dữ liệu bất thường bằng thuật toán toán học tiên tiến:</p>
             <div class="grid-2">
                 <div>
                     <h4 style="margin-top:0; color:var(--warning-color);">1. Phương pháp IQR (Interquartile Range)</h4>
@@ -345,28 +342,27 @@
                 </div>
             </div>
 
-            <h4 style="margin-top:25px;">Biểu đồ Scatter Plot phân tích Tương quan & Phát hiện Outliers:</h4>
+  <h4 style="margin-top:25px;">Biểu đồ Scatter Plot phân tích Tương quan & Phát hiện Outliers:</h4>
             <div class="chart-container" style="height: 320px;">
                 <canvas id="chart-scatter-outliers"></canvas>
             </div>
 
-            <div class="highlight-box" style="background-color: #fff5f5; border-color: var(--danger-color); margin-top: 25px;">
+ <div class="highlight-box" style="background-color: #fff5f5; border-color: var(--danger-color); margin-top: 25px;">
                 <strong>Phân tích ảnh hưởng của Outliers đối với mô hình Học Máy (Machine Learning):</strong><br>
                 - Các mô hình dựa trên khoảng cách hoặc tối ưu hóa bình phương (như Linear Regression, K-Means) cực kỳ nhạy cảm với dị biệt. Một điểm outlier quá lớn sẽ kéo đường hồi quy lệch hẳn khỏi xu hướng chung, làm tăng sai số MSE toàn cục.<br>
                 - Việc phát hiện outliers giúp kỹ sư quyết định giữ lại (nếu đó là biến động thực của thị trường) hoặc loại bỏ/thay thế (nếu do lỗi nhập liệu) nhằm nâng cao độ chính xác tổng thể của mô hình.
             </div>
         </div>
-
-        <!-- BÀI 4 -->
+  <!-- BÀI 4 -->
         <div class="card" style="border-left-color: var(--primary-color);">
             <div class="card-title">
                 <span>Bài 4: Sơ Đồ Quy Trình Các Bước Trong Khoa Học Dữ Liệu</span>
                 <span class="badge" style="background-color: var(--primary-color);">2 Điểm</span>
             </div>
             
-            <p>Dưới đây là sơ đồ kiến trúc thể hiện vòng đời xây dựng một mô hình học máy tiêu chuẩn:</p>
+ <p>Dưới đây là sơ đồ kiến trúc thể hiện vòng đời xây dựng một mô hình học máy tiêu chuẩn:</p>
             
-            <div class="flowchart-container">
+  <div class="flowchart-container">
                 <svg width="850" height="130" viewBox="0 0 850 130" style="background-color: #fcfcfc; border: 1px solid #e2e8f0; border-radius: 8px;">
                     <!-- Định nghĩa mũi tên -->
                     <defs>
@@ -374,43 +370,39 @@
                             <polygon points="0 0, 10 3.5, 0 7" fill="#555" />
                         </marker>
                     </defs>
-
-                    <!-- Khối 1 -->
+  <!-- Khối 1 -->
                     <rect x="15" y="40" width="110" height="50" rx="5" fill="#2c3e50" />
                     <text x="70" y="70" fill="white" font-size="11" font-weight="bold" text-anchor="middle">1. Thu thập dữ liệu</text>
                     <path d="M 125 65 L 145 65" stroke="#555" stroke-width="2" marker-end="url(#arrow)" />
-
-                    <!-- Khối 2 -->
+   <!-- Khối 2 -->
                     <rect x="155" y="40" width="110" height="50" rx="5" fill="#e74c3c" />
                     <text x="210" y="70" fill="white" font-size="11" font-weight="bold" text-anchor="middle">2. Làm sạch dữ liệu</text>
                     <path d="M 265 65 L 285 65" stroke="#555" stroke-width="2" marker-end="url(#arrow)" />
 
                     <!-- Khối 3 -->
-                    <rect x="295" y="40" width="110" height="50" rx="5" fill="#3498db" />
+ <rect x="295" y="40" width="110" height="50" rx="5" fill="#3498db" />
                     <text x="350" y="70" fill="white" font-size="11" font-weight="bold" text-anchor="middle">3. Khám phá (EDA)</text>
                     <path d="M 405 65 L 425 65" stroke="#555" stroke-width="2" marker-end="url(#arrow)" />
 
                     <!-- Khối 4 -->
-                    <rect x="435" y="40" width="120" height="50" rx="5" fill="#e67e22" />
+  <rect x="435" y="40" width="120" height="50" rx="5" fill="#e67e22" />
                     <text x="495" y="70" fill="white" font-size="11" font-weight="bold" text-anchor="middle">4. Trích xuất đặc trưng</text>
                     <path d="M 555 65 L 575 65" stroke="#555" stroke-width="2" marker-end="url(#arrow)" />
 
                     <!-- Khối 5 -->
-                    <rect x="585" y="40" width="115" height="50" rx="5" fill="#2ecc71" />
-                    <text x="642" y="70" fill="white" font-size="11" font-weight="bold" text-anchor="middle">5. Huấn luyện mô hình</text>
+ <rect x="585" y="40" width="115" height="50" rx="5" fill="#2ecc71" />
+                   <text x="642" y="70" fill="white" font-size="11" font-weight="bold" text-anchor="middle">5. Huấn luyện mô hình</text>
                     <path d="M 700 65 L 720 65" stroke="#555" stroke-width="2" marker-end="url(#arrow)" />
 
                     <!-- Khối 6 -->
-                    <rect x="730" y="40" width="105" height="50" rx="5" fill="#9b59b6" />
+ <rect x="730" y="40" width="105" height="50" rx="5" fill="#9b59b6" />
                     <text x="782" y="70" fill="white" font-size="11" font-weight="bold" text-anchor="middle">6. Đánh giá mô hình</text>
                 </svg>
             </div>
             <p style="font-size: 13px; color:#555; font-style:italic; text-align:center;">(Sơ đồ SVG được dựng trực quan, sắc nét trên mọi loại màn hình hiển thị)</p>
         </div>
-
-    </div>
-
-    <!-- SCRIPT LOGIC TOÁN HỌC VÀ KHỞI TẠO BIỂU ĐỒ -->
+ </div>
+<!-- SCRIPT LOGIC TOÁN HỌC VÀ KHỞI TẠO BIỂU ĐỒ -->
     <script>
         // Tập dữ liệu thô ban đầu (Đã cài cắm 1 giá trị trống null và 1 dòng lặp)
         const rawDataset = [
@@ -431,14 +423,14 @@
             { id: 15, area: 52, price: 1.9, type: "Chung cư" }
         ];
 
-        // Khởi tạo trang web
+ // Khởi tạo trang web
         window.addEventListener('DOMContentLoaded', () => {
             renderRawTable();
             calculateInitialStats();
             initCharts();
         });
 
-        // 1. Render dữ liệu
+  // 1. Render dữ liệu
         function renderRawTable() {
             const tbody = document.querySelector('#table-raw-10 tbody');
             tbody.innerHTML = '';
@@ -447,7 +439,7 @@
             first10.forEach(item => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${item.id}</td>
+ <td>${item.id}</td>
                     <td>${item.area}</td>
                     <td>${item.price === null ? '<span style="color:red;font-weight:bold;">MISSING</span>' : item.price}</td>
                     <td>${item.type}</td>
@@ -457,26 +449,26 @@
         }
 
         // 2. Tính toán thống kê mô tả Bài 1
-        function calculateInitialStats() {
+  function calculateInitialStats() {
             // Lọc danh sách số hợp lệ (bỏ null để tính toán chính xác)
             const areas = rawDataset.map(d => d.area);
             const prices = rawDataset.filter(d => d.price !== null).map(d => d.price);
 
-            const areaStats = getStats(areas);
+   const areaStats = getStats(areas);
             const priceStats = getStats(prices);
 
-            document.getElementById('area-mean').innerText = areaStats.mean.toFixed(2);
+  document.getElementById('area-mean').innerText = areaStats.mean.toFixed(2);
             document.getElementById('area-min').innerText = areaStats.min.toFixed(2);
             document.getElementById('area-max').innerText = areaStats.max.toFixed(2);
             document.getElementById('area-std').innerText = areaStats.std.toFixed(2);
 
-            document.getElementById('price-mean').innerText = priceStats.mean.toFixed(2);
+  document.getElementById('price-mean').innerText = priceStats.mean.toFixed(2);
             document.getElementById('price-min').innerText = priceStats.min.toFixed(2);
             document.getElementById('price-max').innerText = priceStats.max.toFixed(2);
             document.getElementById('price-std').innerText = priceStats.std.toFixed(2);
         }
 
-        function getStats(arr) {
+ function getStats(arr) {
             const n = arr.length;
             const mean = arr.reduce((a, b) => a + b, 0) / n;
             const min = Math.min(...arr);
@@ -487,7 +479,7 @@
         }
 
         // 3. Khởi tạo biểu đồ phân phối ban đầu
-        let histogramChart, barChart;
+ let histogramChart, barChart;
         function initCharts() {
             // Vẽ Histogram tần suất Diện tích
             const ctxHist = document.getElementById('chart-histogram').getContext('2d');
@@ -506,7 +498,7 @@
                 options: { responsive: true, maintainAspectRatio: false }
             });
 
-            // Vẽ Bar chart cho phân loại hình
+ // Vẽ Bar chart cho phân loại hình
             const ctxBar = document.getElementById('chart-bar-type').getContext('2d');
             barChart = new Chart(ctxBar, {
                 type: 'pie', // Đổi biến thể sang hình tròn/cột tùy chọn cho đẹp mắt
@@ -521,18 +513,18 @@
             });
         }
 
-        // 4. Kích hoạt xử lý Bài 2 & Bài 3
+  // 4. Kích hoạt xử lý Bài 2 & Bài 3
         function cleanAndProcessData() {
             document.getElementById('cleaning-result-area').style.display = 'block';
 
-            // Xử lý điền trung vị cho ô trống Price (Trung vị của tập dữ liệu là khoảng 2.5)
+  // Xử lý điền trung vị cho ô trống Price (Trung vị của tập dữ liệu là khoảng 2.5)
             const medianPrice = 2.4;
             
-            // Lọc trùng lặp và làm sạch
+  // Lọc trùng lặp và làm sạch
             let cleanData = [];
             let seen = new Set();
             
-            rawDataset.forEach(item => {
+ rawDataset.forEach(item => {
                 // Tạo một chuỗi định danh duy nhất để kiểm tra trùng lặp bản ghi
                 const stringify = `${item.area}-${item.price}-${item.type}`;
                 if (!seen.has(stringify)) {
@@ -543,7 +535,7 @@
                 }
             });
 
-            // Vẽ đồ thị so sánh hộp nến (Boxplot mô phỏng qua phân bố dữ liệu)
+   // Vẽ đồ thị so sánh hộp nến (Boxplot mô phỏng qua phân bố dữ liệu)
             const ctxBox = document.getElementById('chart-boxplot-clean').getContext('2d');
             new Chart(ctxBox, {
                 type: 'bar',
@@ -565,10 +557,10 @@
                 options: { responsive: true, maintainAspectRatio: false }
             });
 
-            // Bài 3: Phân tích phát hiện Outlier cụ thể
+  // Bài 3: Phân tích phát hiện Outlier cụ thể
             // Thuật toán IQR cho thuộc tính Price
             document.getElementById('iqr-results').innerHTML = `
-                - Tứ phân vị thứ nhất Q1: 1.85 Tỷ<br>
+  - Tứ phân vị thứ nhất Q1: 1.85 Tỷ<br>
                 - Tứ phân vị thứ ba Q3: 4.20 Tỷ<br>
                 - Khoảng cách IQR = 2.35 Tỷ<br>
                 - Ngưỡng trên tối đa: Q3 + 1.5*IQR = 7.72 Tỷ<br>
@@ -576,8 +568,8 @@
             `;
 
             // Thuật toán Z-score
-            document.getElementById('zscore-results').innerHTML = `
-                - Giá trị trung bình tập dữ liệu: 4.88 Tỷ<br>
+    document.getElementById('zscore-results').innerHTML = `
+       - Giá trị trung bình tập dữ liệu: 4.88 Tỷ<br>
                 - Độ lệch chuẩn mẫu: 6.67 Tỷ<br>
                 - Điểm dữ liệu dòng số 8 có: Z-score = (28 - 4.88) / 6.67 = <strong>+3.46</strong><br>
                 ➔ <strong>Kết luận:</strong> Vì |Z| > 3.0, đây là điểm dị biệt cực đại cần xử lý.
