@@ -106,3 +106,64 @@
     <script src="script.js"></script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Quản Trị - Đăng Bài Viết</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <div class="container mx-auto px-4 py-10 max-w-2xl">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold text-gray-800">Hệ thống Đăng bài</h1>
+            <a href="index.html" class="text-sm text-blue-600 hover:underline">Xem Trang Chủ &rarr;</a>
+        </div>
+
+        <!-- FORM ĐĂNG BÀI -->
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <form id="article-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Tiêu đề bài viết</label>
+                    <input type="text" id="title" required class="mt-1 w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-red-500 outline-none">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Danh mục</label>
+                        <select id="category" class="mt-1 w-full p-2 border border-gray-300 rounded outline-none">
+                            <option value="Chính trị">Chính trị</option>
+                            <option value="Công nghệ">Công nghệ</option>
+                            <option value="Kinh doanh">Kinh doanh</option>
+                            <option value="Giải trí">Giải trí</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Thời gian hiển thị</label>
+                        <input type="text" id="time" placeholder="Ví dụ: Vừa xong, 5 phút trước" required class="mt-1 w-full p-2 border border-gray-300 rounded outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Link ảnh bao bì (URL)</label>
+                    <input type="url" id="image" placeholder="https://example.com/image.jpg" required class="mt-1 w-full p-2 border border-gray-300 rounded outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Mô tả ngắn (Tóm tắt)</label>
+                    <textarea id="summary" rows="3" required class="mt-1 w-full p-2 border border-gray-300 rounded outline-none"></textarea>
+                </div>
+
+                <button type="submit" class="w-full bg-red-600 text-white p-2 rounded font-bold hover:bg-red-700 transition">
+                    Xuất bản bài viết
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Nhúng cùng file script.js để dùng chung bộ nhớ -->
+    <script src="script.js"></script>
+</body>
+</html>
