@@ -178,3 +178,34 @@
 
 </body>
 </html>
+
+<script>
+    "use strict";
+
+    const form = document.getElementById("form");
+
+    form.addEventListener("submit", function (event) {
+        // 1. Chặn trình duyệt reload trang để chúng ta kiểm tra dữ liệu trước
+        event.preventDefault(); 
+
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const message = document.getElementById("message").value.trim();
+
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        // 2. Nếu gõ sai Email, hàm dừng lại ở đây (người dùng ở lại form để sửa)
+        if (!emailPattern.test(email)) {
+            alert("Wrong email format");
+            return; 
+        }
+        
+        // 3. Nếu mọi thứ đúng hết, hiện thông báo thành công
+        alert("Form submitted successfully! Redirecting to homepage...");
+
+        // 4. LÀM LỆNH CHUYỂN HƯỚNG SANG TRANG CHỦ Ở ĐÂY:
+        // Thay 'trang-chu.html' bằng tên file trang chủ của bạn (Ví dụ: 'index.html')
+        // Hoặc một đường link URL bất kỳ như 'https://google.com'
+        window.location.href = "index.html"; 
+    });
+  </script>
