@@ -30,19 +30,23 @@
                 <div class="bg-white p-6 rounded-2xl shadow-sm">
                     <h3 class="font-bold text-lg mb-4 text-indigo-900">Tài nguyên & Tệp đính kèm</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Slide -->
                         <div class="border-2 border-dashed border-slate-200 p-6 rounded-xl text-center hover:border-indigo-400 transition">
                             <label class="cursor-pointer block">
                                 <span class="text-sm font-semibold">Tải Slide lên</span>
-                                <input type="file" id="slideInput" class="hidden" onchange="previewFile('slide', this)">
+                                <input type="file" id="slideInput" class="hidden" onchange="handleFile(event, 'slide')">
                             </label>
                             <div id="slidePreview" class="mt-2 text-xs text-indigo-600 font-bold"></div>
+                            <a id="slideLink" href="#" target="_blank" class="hidden mt-2 inline-block bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-xs font-bold hover:bg-indigo-200">Mở Slide</a>
                         </div>
+                        <!-- Assessment -->
                         <div class="border-2 border-dashed border-slate-200 p-6 rounded-xl text-center hover:border-indigo-400 transition">
                             <label class="cursor-pointer block">
                                 <span class="text-sm font-semibold">Tải Assessment lên</span>
-                                <input type="file" id="assessInput" class="hidden" onchange="previewFile('assess', this)">
+                                <input type="file" id="assessInput" class="hidden" onchange="handleFile(event, 'assess')">
                             </label>
                             <div id="assessPreview" class="mt-2 text-xs text-indigo-600 font-bold"></div>
+                            <a id="assessLink" href="#" target="_blank" class="hidden mt-2 inline-block bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-xs font-bold hover:bg-indigo-200">Mở Assessment</a>
                         </div>
                     </div>
                 </div>
@@ -64,7 +68,6 @@
     <script>
         let currentLab = 1;
 
-        // Khởi tạo danh sách Lab
         const labList = document.getElementById('labList');
         for(let i=1; i<=8; i++) {
             const btn = document.createElement('button');
@@ -79,11 +82,29 @@
             document.getElementById('mainContent').classList.remove('hidden');
             document.getElementById('labHeader').innerText = `Thực hành Lab ${id}`;
             
-            // Tải dữ liệu từ LocalStorage
+            // Tải Code
             document.getElementById('c1').value = localStorage.getItem(`lab${id}_c1`) || "";
             document.getElementById('c2').value = localStorage.getItem(`lab${id}_c2`) || "";
             document.getElementById('c3').value = localStorage.getItem(`lab${id}_c3`) || "";
             document.getElementById('c4').value = localStorage.getItem(`lab${id}_c4`) || "";
+            
+            // Tải File (Slide và Assessment)
+            loadFileInfo(id, 'slide');
+            loadFileInfo(id, 'assess');
+        }
+
+        function loadFileInfo(labId, type) {
+            const sName = localStorage.getItem(`lab${labId}_${type}Name`);
+            const sUrl = localStorage.getItem(`lab${labId}_${type}Url`);
+            if(sName && sUrl) {
+                document.getElementById(`${type}Preview`).innerText = "Tệp: " + sName;
+                const link = document.getElementById(`${type}Link`);
+                link.href = sUrl;
+                link.classList.remove('hidden');
+            } else {
+                document.getElementById(`${type}Preview`).innerText = "";
+                document.getElementById(`${type}Link`).classList.add('hidden');
+            }
         }
 
         function saveData() {
@@ -91,12 +112,24 @@
             localStorage.setItem(`lab${currentLab}_c2`, document.getElementById('c2').value);
             localStorage.setItem(`lab${currentLab}_c3`, document.getElementById('c3').value);
             localStorage.setItem(`lab${currentLab}_c4`, document.getElementById('c4').value);
-            alert(`Đã lưu dữ liệu Lab ${currentLab} vào trình duyệt!`);
+            alert(`Đã lưu tiến độ Lab ${currentLab}!`);
         }
 
-        function previewFile(type, input) {
-            if(input.files && input.files[0]) {
-                document.getElementById(`${type}Preview`).innerText = "Tệp đã tải: " + input.files[0].name;
+        function handleFile(event, type) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const url = e.target.result;
+                    document.getElementById(`${type}Preview`).innerText = "Tệp: " + file.name;
+                    const link = document.getElementById(`${type}Link`);
+                    link.href = url;
+                    link.classList.remove('hidden');
+                    // Lưu vào localStorage
+                    localStorage.setItem(`lab${currentLab}_${type}Name`, file.name);
+                    localStorage.setItem(`lab${currentLab}_${type}Url`, url);
+                };
+                reader.readAsDataURL(file);
             }
         }
     </script>
