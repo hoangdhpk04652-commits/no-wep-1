@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -66,7 +67,7 @@
            3. BỐ CỤC TRÀN TOÀN BỘ MÀN HÌNH (100% WIDTH GRID)
            ========================================== */
         .container {
-            width: 100vw; /* Chiếm trọn vẹn 100% chiều rộng màn hình trình duyệt */
+            width: 100%; /* Chiếm trọn vẹn 100% chiều rộng màn hình trình duyệt */
             max-width: 100%;
             margin: 0;
             padding: 30px; /* Khoảng cách lề rìa nhẹ nhàng */
