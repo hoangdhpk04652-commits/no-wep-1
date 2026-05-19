@@ -35,6 +35,7 @@
             line-height: 1.6;
             width: 100%;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         /* ==========================================
@@ -43,43 +44,43 @@
         header {
             background-color: var(--primary-color);
             color: white;
-            padding: 40px 20px;
+            padding: 35px 20px;
             text-align: center;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             width: 100%;
         }
 
         header h1 {
-            font-size: 32px;
+            font-size: 30px;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         header p {
             opacity: 0.9;
-            font-size: 16px;
+            font-size: 15px;
         }
 
         /* ==========================================
-           3. BỐ CỤC TRÀN TOÀN BỘ MÀN HÌNH CHÍNH (CONTAINER)
+           3. BỐ CỤC TRÀN TOÀN BỘ MÀN HÌNH (100% WIDTH GRID)
            ========================================== */
         .container {
-            width: 100%;
-            max-width: 100%; /* Đảm bảo tràn 100% màn hình, không bị bóp nghẹt chiều rộng */
+            width: 100vw; /* Chiếm trọn vẹn 100% chiều rộng màn hình trình duyệt */
+            max-width: 100%;
             margin: 0;
-            padding: 40px 40px; /* Tạo khoảng trống đệm nhẹ ở 2 bên rìa ngoài */
+            padding: 30px; /* Khoảng cách lề rìa nhẹ nhàng */
             display: grid;
-            grid-template-columns: 1fr 1fr; /* Chia đôi màn hình cực rộng, cân xứng 2 bên */
-            gap: 40px;
+            grid-template-columns: 1.05fr 0.95fr; /* Chia đôi hai cột cân xứng hoàn hảo */
+            gap: 30px;
             box-sizing: border-box;
         }
 
-        /* Khi màn hình dọc (iPad, Điện thoại) sẽ tự xếp dọc */
-        @media (max-width: 1100px) {
+        /* Thích ứng trên màn hình dọc (máy tính bảng, điện thoại) */
+        @media (max-width: 1150px) {
             .container {
-                grid-template-columns: 1fr;
-                padding: 20px 15px;
+                grid-template-columns: 1fr; /* Tự động xếp chồng thành một cột */
+                padding: 15px;
             }
         }
 
@@ -87,10 +88,10 @@
         .panel {
             background-color: var(--card-bg);
             border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-            padding: 40px;
-            width: 100%;
-            border-top: 5px solid var(--secondary-color);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+            padding: 35px;
+            width: 100%; /* Giãn rộng hết mức cột chứa nó */
+            border-top: 6px solid var(--secondary-color);
             box-sizing: border-box;
         }
 
@@ -102,8 +103,8 @@
             margin-top: 0;
             color: var(--primary-color);
             border-bottom: 3px solid #f1f5f9;
-            padding-bottom: 18px;
-            font-size: 24px;
+            padding-bottom: 15px;
+            font-size: 22px;
             font-weight: 700;
             margin-bottom: 25px;
             display: flex;
@@ -115,14 +116,15 @@
            4. BIỂU MẪU & CÁC Ô NHẬP LIỆU (FORM)
            ========================================== */
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 22px;
+            width: 100%;
         }
 
         .form-group label {
             display: block;
             font-weight: 600;
-            margin-bottom: 10px;
-            font-size: 16px;
+            margin-bottom: 8px;
+            font-size: 15px;
             color: #334155;
         }
 
@@ -130,10 +132,10 @@
         .form-group input, 
         .form-group textarea {
             width: 100%;
-            padding: 14px 18px;
+            padding: 12px 16px;
             border: 2px solid var(--border-color);
             border-radius: 8px;
-            font-size: 16px;
+            font-size: 15px;
             font-family: inherit;
             box-sizing: border-box;
             outline: none;
@@ -145,34 +147,36 @@
         .form-group input:focus {
             border-color: var(--secondary-color);
             background-color: #ffffff;
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
         }
 
-        /* KHU VỰC TRÌNH BIÊN TẬP CODE MÀU ĐEN CHUYÊN NGHIỆP */
+        /* KHU VỰC TRÌNH BIÊN TẬP CODE MÀU ĐEN ĐẬM CHẤT TERMINAL */
         .form-group textarea.code-editor {
-            font-family: 'Fira Code', 'Courier New', Courier, monospace;
-            background-color: #0f172a !important; /* Luôn giữ màu đen đậm chất terminal */
-            color: #38bdf8 !important; /* Màu chữ xanh lập trình rực rỡ */
-            padding: 20px;
+            font-family: 'Fira Code', 'Courier New', Courier, monospace !important;
+            background-color: #0f172a !important; /* Luôn cố định màu đen sẫm */
+            color: #38bdf8 !important; /* Chữ lập trình xanh neon phát sáng */
+            padding: 20px !important;
             min-height: 380px;
-            font-size: 15px;
-            line-height: 1.7;
-            border: 2px solid #334155;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+            font-size: 15px !important;
+            line-height: 1.7 !important;
+            border: 2px solid #1e293b !important;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6) !important;
+            resize: vertical;
         }
 
         .form-group textarea.code-editor:focus {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2), inset 0 2px 4px rgba(0, 0, 0, 0.5);
+            border-color: var(--secondary-color) !important;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2), inset 0 2px 8px rgba(0, 0, 0, 0.6) !important;
         }
 
         /* ==========================================
-           5. THIẾT KẾ CÁC NÚT BẤM (BUTTONS)
+           5. THIẾT LẬP CÁC NÚT BẤM (BUTTONS)
            ========================================== */
         .btn-container {
             display: flex;
             gap: 15px;
-            margin-top: 30px;
+            margin-top: 25px;
+            width: 100%;
         }
 
         .btn {
@@ -180,14 +184,14 @@
             background-color: var(--secondary-color);
             color: white;
             border: none;
-            padding: 16px 24px;
-            font-size: 16px;
+            padding: 14px 22px;
+            font-size: 15px;
             border-radius: 8px;
             cursor: pointer;
             font-weight: 700;
             text-align: center;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.15);
             display: inline-flex;
             justify-content: center;
             align-items: center;
@@ -196,8 +200,8 @@
 
         .btn:hover {
             opacity: 0.95;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(37, 99, 235, 0.3);
+            transform: translateY(-1.5px);
+            box-shadow: 0 6px 12px rgba(37, 99, 235, 0.25);
         }
 
         .btn:active {
@@ -206,25 +210,25 @@
 
         .btn-success {
             background-color: var(--success-color);
-            box-shadow: 0 4px 6px rgba(22, 163, 74, 0.2);
+            box-shadow: 0 4px 6px rgba(22, 163, 74, 0.15);
         }
         
         .btn-success:hover {
-            box-shadow: 0 6px 12px rgba(22, 163, 74, 0.3);
+            box-shadow: 0 6px 12px rgba(22, 163, 74, 0.25);
         }
 
         /* ==========================================
            6. HIỂN THỊ DANH SÁCH LỊCH SỬ NỘP BÀI
            ========================================== */
         .submitted-list {
-            margin-top: 30px;
+            margin-top: 25px;
         }
 
         .submitted-item {
             background: #f8fafc;
             border: 2px solid #e2e8f0;
             border-radius: 8px;
-            padding: 20px;
+            padding: 18px;
             margin-bottom: 15px;
             position: relative;
             transition: all 0.2s ease;
@@ -236,32 +240,32 @@
         }
 
         .submitted-item h5 {
-            margin: 0 0 8px 0;
-            font-size: 16px;
+            margin: 0 0 6px 0;
+            font-size: 15px;
             font-weight: 700;
             color: var(--primary-color);
         }
 
         .submitted-item p {
             margin: 0;
-            font-size: 14px;
+            font-size: 13px;
             color: #64748b;
         }
 
         .status-badge {
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: 18px;
+            right: 18px;
             background: #dcfce7;
             color: #15803d;
-            padding: 4px 12px;
+            padding: 3px 10px;
             border-radius: 6px;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
         }
 
         /* ==========================================
-           7. TRÌNH BIỂU DIỄN KẾT QUẢ MINH HỌA
+           7. TRÌNH BIỂU DIỄN KẾT QUẢ MINH HỌA (BÊN PHẢI)
            ========================================== */
         .demo-area {
             margin-top: 25px;
@@ -269,12 +273,14 @@
             background: #f8fafc;
             border-radius: 8px;
             border: 2px dashed #cbd5e1;
+            box-sizing: border-box;
+            width: 100%;
         }
 
         .demo-area strong {
             display: block;
-            font-size: 16px;
-            margin-bottom: 12px;
+            font-size: 15px;
+            margin-bottom: 10px;
             color: var(--primary-color);
         }
 
@@ -311,12 +317,13 @@
         /* Chân trang */
         footer {
             text-align: center;
-            padding: 30px 20px;
+            padding: 25px 20px;
             color: #64748b;
-            font-size: 14px;
+            font-size: 13px;
             background-color: #f1f5f9;
             border-top: 1px solid #e2e8f0;
-            margin-top: 60px;
+            margin-top: 40px;
+            width: 100%;
         }
     </style>
 </head>
@@ -328,10 +335,10 @@
         <p>Môn học: ITA106 | Quản lý, chạy thực nghiệm và đẩy mã nguồn trực tuyến</p>
     </header>
 
-    <!-- KHU VỰC HIỂN THỊ CHÍNH -->
+    <!-- KHU VỰC HIỂN THỊ CHÍNH (ĐÃ FIX TRÀN 100% CHIỀU RỘNG MÀN HÌNH) -->
     <div class="container">
         
-        <!-- CỘT BÊN TRÁI: KHUNG ĐIỀN THÔNG TIN & NHẬP CODE (PHÓNG TO CỰC ĐẠI) -->
+        <!-- CỘT BÊN TRÁI: KHUNG ĐIỀN THÔNG TIN & NHẬP CODE -->
         <div class="panel">
             <div class="panel-title">📤 Đẩy Mã Nguồn Nộp Bài</div>
             
