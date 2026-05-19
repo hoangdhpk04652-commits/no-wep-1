@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hệ Thống Nộp Bài & Quản Lý Bài Tập ITA106</title>
-    <!-- Nhúng Chart.js qua CDN để hiển thị biểu đồ tự động cho phần minh họa bài tập -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -25,6 +24,7 @@
             margin: 0;
             padding: 0;
             line-height: 1.6;
+            width: 100%;
         }
 
         header {
@@ -33,6 +33,8 @@
             padding: 30px 20px;
             text-align: center;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            width: 100%;
+            box-sizing: border-box;
         }
 
         header h1 {
@@ -48,18 +50,21 @@
             font-size: 15px;
         }
 
+        /* CHỈNH SỬA TẠI ĐÂY: Giãn đều container rộng hết cỡ màn hình (max-width lớn hơn) */
         .container {
-            max-width: 1200px;
+            max-width: 95%; 
+            width: 1400px;
             margin: 30px auto;
             padding: 0 20px;
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 1fr; /* Chia đôi 2 nửa màn hình cân xứng */
             gap: 30px;
+            box-sizing: border-box;
         }
 
-        @media (max-width: 900px) {
+        @media (max-width: 1024px) {
             .container {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr; /* Trên màn hình dọc hoặc ipad sẽ xếp chồng gọn gàng */
             }
         }
 
@@ -69,6 +74,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             padding: 25px;
             box-sizing: border-box;
+            width: 100%; /* Đảm bảo panel chiếm hết không gian cột */
         }
 
         .panel-title {
@@ -78,9 +84,6 @@
             padding-bottom: 12px;
             font-size: 20px;
             font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
         /* Form styling */
@@ -100,7 +103,7 @@
         .form-group input, 
         .form-group textarea {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             border: 1px solid #cbd5e1;
             border-radius: 6px;
             font-size: 14px;
@@ -121,7 +124,7 @@
             background-color: #0f172a;
             color: #38bdf8;
             padding: 15px;
-            min-height: 200px;
+            min-height: 250px;
             resize: vertical;
         }
 
@@ -129,15 +132,12 @@
             background-color: var(--secondary-color);
             color: white;
             border: none;
-            padding: 12px 20px;
+            padding: 12px 24px;
             font-size: 14px;
             border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
             transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
         }
 
         .btn:hover {
@@ -147,10 +147,7 @@
 
         .btn-success { background-color: var(--success-color); }
 
-        /* Danh sách bài tập đã nộp */
-        .submitted-list {
-            margin-top: 20px;
-        }
+        .submitted-list { margin-top: 20px; }
 
         .submitted-item {
             background: #f8fafc;
@@ -159,18 +156,6 @@
             padding: 15px;
             margin-bottom: 12px;
             position: relative;
-        }
-
-        .submitted-item h5 {
-            margin: 0 0 5px 0;
-            font-size: 15px;
-            color: var(--primary-color);
-        }
-
-        .submitted-item p {
-            margin: 0;
-            font-size: 13px;
-            color: #64748b;
         }
 
         .status-badge {
@@ -185,7 +170,6 @@
             font-weight: bold;
         }
 
-        /* Bảng & biểu đồ phần demo */
         .demo-area {
             margin-top: 20px;
             padding: 15px;
@@ -202,7 +186,7 @@
         }
 
         th, td {
-            padding: 8px;
+            padding: 10px;
             border-bottom: 1px solid #e2e8f0;
             text-align: left;
         }
@@ -210,7 +194,7 @@
         th { background: #f1f5f9; }
 
         .chart-box {
-            height: 180px;
+            height: 200px;
             margin-top: 15px;
         }
     </style>
@@ -224,7 +208,6 @@
 
     <div class="container">
         
-        <!-- BÊN TRÁI: GIAO DIỆN ĐẨY CODE VÀ NỘP BÀI -->
         <div class="panel">
             <div class="panel-title">📤 Đẩy Mã Nguồn Nộp Bài</div>
             
@@ -265,7 +248,6 @@
 
             <h4 style="margin-top: 30px; border-top: 1px solid #e2e8f0; padding-top: 15px;">Lịch sử đẩy code thành công:</h4>
             <div class="submitted-list" id="log-list">
-                <!-- Các bài nộp sẽ hiển thị ở đây -->
                 <div class="submitted-item">
                     <span class="status-badge">Đã đồng bộ</span>
                     <h5>Bài 1: Khám phá dữ liệu ban đầu</h5>
@@ -274,7 +256,6 @@
             </div>
         </div>
 
-        <!-- BÊN PHẢI: KHU VỰC KHỞI CHẠY VÀ XEM TRƯỚC KẾT QUẢ THỰC NGHIỆM -->
         <div class="panel">
             <div class="panel-title">📊 Trình Mô Phỏng & Kiểm Tra Kết Quả Toán Học</div>
             <p style="font-size: 14px; color: #64748b;">Trình giả lập này giúp bạn chạy thử nghiệm thuật toán của Bài 1, 2, 3 dựa trên mã nguồn bạn vừa đẩy lên.</p>
@@ -283,7 +264,6 @@
                 <button class="btn btn-success" onclick="runSimulation()">Kích hoạt Chạy thử nghiệm</button>
             </div>
 
-            <!-- Kết quả Bài 1 -->
             <div class="demo-area">
                 <strong>[Xem trước Bài 1] 10 dòng dữ liệu & Thống kê:</strong>
                 <table>
@@ -302,20 +282,18 @@
                 </div>
             </div>
 
-            <!-- Kết quả Bài 2 & 3 -->
             <div class="demo-area" id="demo-clean-area" style="display:none;">
                 <strong>[Xem trước Bài 2 & 3] Làm sạch dữ liệu & Phát hiện Outliers:</strong>
                 <p style="font-size:13px; margin: 5px 0 0 0; color: #16a34a;">
                     ✔ Đã tự động điền giá trị trung vị cho phần dữ liệu trống.<br>
                     ✔ Đã quét loại bỏ 1 dòng trùng lặp hoàn toàn.<br>
-                    ⚠ <b>Phát hiện biến động bất thường (IQR/Z-score):</b> Căn hộ 300m² có Giá 28 Tỷ vượt ngưỡng quy định (Z-score = +3.46).
+                    ⚠ <b>Phát hiện biến động bất thường (IQR/Z-score):</b> Căn hộ 300m² có Giá 28 Tỷ vượt ngưỡng quy định.
                 </p>
                 <div class="chart-box">
                     <canvas id="demo-chart"></canvas>
                 </div>
             </div>
 
-            <!-- Kết quả Bài 4 -->
             <div class="demo-area">
                 <strong>[Xem trước Bài 4] Sơ đồ Pipeline Khoa học dữ liệu:</strong>
                 <div style="text-align:center; margin-top:10px;">
@@ -331,41 +309,34 @@
                     </svg>
                 </div>
             </div>
-
         </div>
 
     </div>
 
     <script>
-        // Các mẫu code gợi ý sẵn cho từng bài tập để sinh viên dễ lựa chọn khi bấm chuyển bài
         const codeTemplates = {
-            "1": `# BÀI 1: KHÁM PHÁ DỮ LIỆU BAN ĐẦU\nimport pandas as pd\n\ndf = pd.read_csv("data.csv")\nprint("10 dòng đầu tiên:")\nprint(df.head(10))\nprint(f"Kích thước file: {df.shape}")\nprint(df.describe())`,
-            "2": `# BÀI 2: LÀM SẠCH DỮ LIỆU\n# Điền giá trị trung vị và loại bỏ bản ghi trùng\ndf['price'] = df['price'].fillna(df['price'].median())\ndf = df.drop_duplicates()\nprint("Dữ liệu sau khi làm sạch:", df.shape)`,
-            "3": `# BÀI 3: PHÁT HIỆN OUTLIERS\nq1 = df['price'].quantile(0.25)\nq3 = df['price'].quantile(0.75)\niqr = q3 - q1\nlower_bound = q1 - 1.5 * iqr\nupper_bound = q3 + 1.5 * iqr\noutliers = df[(df['price'] < lower_bound) | (df['price'] > upper_bound)]\nprint("Số lượng bản ghi bất thường:", len(outliers))`,
-            "4": `# BÀI 4: THIẾT KẾ SƠ ĐỒ QUY TRÌNH KHOA HỌC DỮ LIỆU\n# 1. Thu thập -> 2. Làm sạch -> 3. EDA -> 4. Trích xuất đặc trưng -> 5. Train -> 6. Test\nprint("Pipeline executed successfully!")`
+            "1": `# BÀI 1: KHÁM PHÁ DỮ LIỆU BAN ĐẦU\\nimport pandas as pd\\n\\ndf = pd.read_csv("data.csv")\\nprint("10 dòng đầu tiên:")\\nprint(df.head(10))\\nprint(f"Kích thước file: {df.shape}")\\nprint(df.describe())`,
+            "2": `# BÀI 2: LÀM SẠCH DỮ LIỆU\\n# Điền giá trị trung vị và loại bỏ bản ghi trùng\\ndf['price'] = df['price'].fillna(df['price'].median())\\ndf = df.drop_duplicates()\\nprint("Dữ liệu sau khi làm sạch:", df.shape)`,
+            "3": `# BÀI 3: PHÁT HIỆN OUTLIERS\\nq1 = df['price'].quantile(0.25)\\nq3 = df['price'].quantile(0.75)\\niqr = q3 - q1\\nlower_bound = q1 - 1.5 * iqr\\nupper_bound = q3 + 1.5 * iqr\\noutliers = df[(df['price'] < lower_bound) | (df['price'] > upper_bound)]\\nprint("Số lượng bản ghi bất thường:", len(outliers))`,
+            "4": `# BÀI 4: THIẾT KẾ SƠ ĐỒ QUY TRÌNH KHOA HỌC DỮ LIỆU\\n# 1. Thu thập -> 2. Làm sạch -> 3. EDA -> 4. Trích xuất đặc trưng -> 5. Train -> 6. Test\\nprint("Pipeline executed successfully!")`
         };
 
-        // Hàm cập nhật mẫu code khi đổi thẻ select
         function updateCodeTemplate() {
             const select = document.getElementById("exercise-select").value;
             document.getElementById("code-area").value = codeTemplates[select];
         }
 
-        // Thiết lập mã nguồn ban đầu khi load trang
         window.onload = function() {
             updateCodeTemplate();
         };
 
-        // Xử lý sự kiện bấm nút nộp bài
         document.getElementById("submission-form").addEventListener("submit", function(e) {
             e.preventDefault();
-            
             const name = document.getElementById("student-name").value;
             const id = document.getElementById("student-id").value;
             const exercise = document.getElementById("exercise-select");
             const exerciseText = exercise.options[exercise.selectedIndex].text;
 
-            // Thêm một item mới vào khu vực lịch sử nộp bài
             const logList = document.getElementById("log-list");
             const item = document.createElement("div");
             item.className = "submitted-item";
@@ -375,15 +346,12 @@
                 <p>Sinh viên: ${name} (${id}) | Thời gian: Vừa xong</p>
             `;
             logList.insertBefore(item, logList.firstChild);
-
             alert("Đã đẩy code bài tập của bạn lên hệ thống lưu trữ trực tuyến thành công!");
         });
 
-        // Hàm chạy trình mô phỏng biểu đồ trực quan
         let currentChart = null;
         function runSimulation() {
             document.getElementById("demo-clean-area").style.display = "block";
-            
             const ctx = document.getElementById("demo-chart").getContext("2d");
             if(currentChart) { currentChart.destroy(); }
 
@@ -405,13 +373,11 @@
             alert("Trình mô phỏng đã thực thi xong mã nguồn bài tập!");
         }
 
-        // Hàm xuất dữ liệu báo cáo ra file text để lưu trữ nộp bài
         function exportToTXT() {
             const name = document.getElementById("student-name").value || "Vo_Danh";
             const id = document.getElementById("student-id").value || "00000";
             const code = document.getElementById("code-area").value;
-            
-            const textContent = `BAO CAO BAI TAP ITA106\nSinh vien: ${name}\nMSSV: ${id}\n\n[MA NGUON DA NOP]:\n${code}`;
+            const textContent = `BAO CAO BAI TAP ITA106\\nSinh vien: ${name}\\nMSSV: ${id}\\n\\n[MA NGUON DA NOP]:\\n${code}`;
             
             const blob = new Blob([textContent], { type: "text/plain;charset=utf-8" });
             const link = document.createElement("a");
