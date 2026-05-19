@@ -62,23 +62,24 @@
         }
 
         /* ==========================================
-           3. BỐ CỤC TRÀN MÀN HÌNH CHÍNH (CONTAINER)
+           3. BỐ CỤC TRÀN TOÀN BỘ MÀN HÌNH CHÍNH (CONTAINER)
            ========================================== */
         .container {
             width: 100%;
-            max-width: 1600px; /* Tăng tối đa độ rộng vùng hiển thị */
-            margin: 40px auto;
-            padding: 0 30px;
+            max-width: 100%; /* Đảm bảo tràn 100% màn hình, không bị bóp nghẹt chiều rộng */
+            margin: 0;
+            padding: 40px 40px; /* Tạo khoảng trống đệm nhẹ ở 2 bên rìa ngoài */
             display: grid;
-            grid-template-columns: 1.1fr 0.9fr; /* Tách 2 cột cân đối: Bên trái to hơn để viết code thoải mái */
+            grid-template-columns: 1fr 1fr; /* Chia đôi màn hình cực rộng, cân xứng 2 bên */
             gap: 40px;
+            box-sizing: border-box;
         }
 
         /* Khi màn hình dọc (iPad, Điện thoại) sẽ tự xếp dọc */
         @media (max-width: 1100px) {
             .container {
                 grid-template-columns: 1fr;
-                padding: 0 15px;
+                padding: 20px 15px;
             }
         }
 
@@ -87,9 +88,10 @@
             background-color: var(--card-bg);
             border-radius: 12px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-            padding: 40px; /* Tăng không gian đệm bên trong rộng rãi */
+            padding: 40px;
             width: 100%;
             border-top: 5px solid var(--secondary-color);
+            box-sizing: border-box;
         }
 
         .panel-right {
@@ -120,7 +122,7 @@
             display: block;
             font-weight: 600;
             margin-bottom: 10px;
-            font-size: 16px; /* Phóng to chữ tiêu đề trường */
+            font-size: 16px;
             color: #334155;
         }
 
@@ -128,10 +130,10 @@
         .form-group input, 
         .form-group textarea {
             width: 100%;
-            padding: 14px 18px; /* Tăng khoảng cách gõ chữ rộng rãi */
+            padding: 14px 18px;
             border: 2px solid var(--border-color);
             border-radius: 8px;
-            font-size: 16px; /* Chữ to rõ ràng không bị mỏi mắt */
+            font-size: 16px;
             font-family: inherit;
             box-sizing: border-box;
             outline: none;
@@ -140,23 +142,28 @@
         }
 
         .form-group select:focus, 
-        .form-group input:focus, 
-        .form-group textarea:focus {
+        .form-group input:focus {
             border-color: var(--secondary-color);
             background-color: #ffffff;
             box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
         }
 
-        /* KHU VỰC TRÌNH BIÊN TẬP CODE (BLACKBOARD) */
-        .code-editor {
+        /* KHU VỰC TRÌNH BIÊN TẬP CODE MÀU ĐEN CHUYÊN NGHIỆP */
+        .form-group textarea.code-editor {
             font-family: 'Fira Code', 'Courier New', Courier, monospace;
-            background-color: #0f172a;
-            color: #38bdf8;
+            background-color: #0f172a !important; /* Luôn giữ màu đen đậm chất terminal */
+            color: #38bdf8 !important; /* Màu chữ xanh lập trình rực rỡ */
             padding: 20px;
-            min-height: 380px; /* Tăng chiều cao của khung gõ code cực rộng */
+            min-height: 380px;
             font-size: 15px;
             line-height: 1.7;
-            border: none;
+            border: 2px solid #334155;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .form-group textarea.code-editor:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2), inset 0 2px 4px rgba(0, 0, 0, 0.5);
         }
 
         /* ==========================================
@@ -173,7 +180,7 @@
             background-color: var(--secondary-color);
             color: white;
             border: none;
-            padding: 16px 24px; /* Phóng to nút bấm */
+            padding: 16px 24px;
             font-size: 16px;
             border-radius: 8px;
             cursor: pointer;
