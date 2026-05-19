@@ -1,542 +1,82 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ Thống Nộp Bài & Quản Lý Bài Tập ITA106</title>
-    <!-- Nhúng thư viện biểu đồ chuyên nghiệp Chart.js -->
+    <title>ITA106 - Quản Lý Lab Cá Nhân</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        /* ==========================================
-           1. THIẾT LẬP BIẾN MÀU SẮC & KHỞI TẠO CHUNG
-           ========================================== */
-        :root {
-            --primary-color: #1e293b;
-            --secondary-color: #2563eb;
-            --success-color: #16a34a;
-            --warning-color: #ea580c;
-            --danger-color: #dc2626;
-            --bg-color: #f1f5f9;
-            --card-bg: #ffffff;
-            --text-color: #1e293b;
-            --border-color: #cbd5e1;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            width: 100%;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* ==========================================
-           2. THANH TIÊU ĐỀ TRÊN CÙNG (HEADER)
-           ========================================== */
-        header {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 35px 20px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            width: 100%;
-        }
-
-        header h1 {
-            font-size: 30px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-        }
-
-        header p {
-            opacity: 0.9;
-            font-size: 15px;
-        }
-
-        /* ==========================================
-           3. BỐ CỤC TRÀN TOÀN BỘ MÀN HÌNH (100% WIDTH GRID)
-           ========================================== */
-        .container {
-            width: 100%; /* Chiếm trọn vẹn 100% chiều rộng màn hình trình duyệt */
-            max-width: 100%;
-            margin: 0;
-            padding: 30px; /* Khoảng cách lề rìa nhẹ nhàng */
-            display: grid;
-            grid-template-columns: 1.05fr 0.95fr; /* Chia đôi hai cột cân xứng hoàn hảo */
-            gap: 30px;
-            box-sizing: border-box;
-        }
-
-        /* Thích ứng trên màn hình dọc (máy tính bảng, điện thoại) */
-        @media (max-width: 1150px) {
-            .container {
-                grid-template-columns: 1fr; /* Tự động xếp chồng thành một cột */
-                padding: 15px;
-            }
-        }
-
-        /* Khung Panel màu trắng bọc nội dung */
-        .panel {
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.06);
-            padding: 35px;
-            width: 100%; /* Giãn rộng hết mức cột chứa nó */
-            border-top: 6px solid var(--secondary-color);
-            box-sizing: border-box;
-        }
-
-        .panel-right {
-            border-top-color: var(--success-color);
-        }
-
-        .panel-title {
-            margin-top: 0;
-            color: var(--primary-color);
-            border-bottom: 3px solid #f1f5f9;
-            padding-bottom: 15px;
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 25px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* ==========================================
-           4. BIỂU MẪU & CÁC Ô NHẬP LIỆU (FORM)
-           ========================================== */
-        .form-group {
-            margin-bottom: 22px;
-            width: 100%;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 8px;
-            font-size: 15px;
-            color: #334155;
-        }
-
-        .form-group select, 
-        .form-group input, 
-        .form-group textarea {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 15px;
-            font-family: inherit;
-            box-sizing: border-box;
-            outline: none;
-            transition: all 0.2s ease-in-out;
-            background-color: #f8fafc;
-        }
-
-        .form-group select:focus, 
-        .form-group input:focus {
-            border-color: var(--secondary-color);
-            background-color: #ffffff;
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
-        }
-
-        /* KHU VỰC TRÌNH BIÊN TẬP CODE MÀU ĐEN ĐẬM CHẤT TERMINAL */
-        .form-group textarea.code-editor {
-            font-family: 'Fira Code', 'Courier New', Courier, monospace !important;
-            background-color: #0f172a !important; /* Luôn cố định màu đen sẫm */
-            color: #38bdf8 !important; /* Chữ lập trình xanh neon phát sáng */
-            padding: 20px !important;
-            min-height: 380px;
-            font-size: 15px !important;
-            line-height: 1.7 !important;
-            border: 2px solid #1e293b !important;
-            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6) !important;
-            resize: vertical;
-        }
-
-        .form-group textarea.code-editor:focus {
-            border-color: var(--secondary-color) !important;
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2), inset 0 2px 8px rgba(0, 0, 0, 0.6) !important;
-        }
-
-        /* ==========================================
-           5. THIẾT LẬP CÁC NÚT BẤM (BUTTONS)
-           ========================================== */
-        .btn-container {
-            display: flex;
-            gap: 15px;
-            margin-top: 25px;
-            width: 100%;
-        }
-
-        .btn {
-            flex: 1;
-            background-color: var(--secondary-color);
-            color: white;
-            border: none;
-            padding: 14px 22px;
-            font-size: 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 700;
-            text-align: center;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.15);
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn:hover {
-            opacity: 0.95;
-            transform: translateY(-1.5px);
-            box-shadow: 0 6px 12px rgba(37, 99, 235, 0.25);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .btn-success {
-            background-color: var(--success-color);
-            box-shadow: 0 4px 6px rgba(22, 163, 74, 0.15);
-        }
-        
-        .btn-success:hover {
-            box-shadow: 0 6px 12px rgba(22, 163, 74, 0.25);
-        }
-
-        /* ==========================================
-           6. HIỂN THỊ DANH SÁCH LỊCH SỬ NỘP BÀI
-           ========================================== */
-        .submitted-list {
-            margin-top: 25px;
-        }
-
-        .submitted-item {
-            background: #f8fafc;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 18px;
-            margin-bottom: 15px;
-            position: relative;
-            transition: all 0.2s ease;
-        }
-
-        .submitted-item:hover {
-            border-color: var(--secondary-color);
-            background-color: #f0fdf4;
-        }
-
-        .submitted-item h5 {
-            margin: 0 0 6px 0;
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--primary-color);
-        }
-
-        .submitted-item p {
-            margin: 0;
-            font-size: 13px;
-            color: #64748b;
-        }
-
-        .status-badge {
-            position: absolute;
-            top: 18px;
-            right: 18px;
-            background: #dcfce7;
-            color: #15803d;
-            padding: 3px 10px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        /* ==========================================
-           7. TRÌNH BIỂU DIỄN KẾT QUẢ MINH HỌA (BÊN PHẢI)
-           ========================================== */
-        .demo-area {
-            margin-top: 25px;
-            padding: 20px;
-            background: #f8fafc;
-            border-radius: 8px;
-            border: 2px dashed #cbd5e1;
-            box-sizing: border-box;
-            width: 100%;
-        }
-
-        .demo-area strong {
-            display: block;
-            font-size: 15px;
-            margin-bottom: 10px;
-            color: var(--primary-color);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-            margin-top: 15px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-        }
-
-        th, td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #e2e8f0;
-            text-align: left;
-        }
-
-        th {
-            background: #f1f5f9;
-            color: #334155;
-            font-weight: 700;
-        }
-
-        .chart-box {
-            height: 250px;
-            margin-top: 20px;
-            position: relative;
-            width: 100%;
-        }
-
-        /* Chân trang */
-        footer {
-            text-align: center;
-            padding: 25px 20px;
-            color: #64748b;
-            font-size: 13px;
-            background-color: #f1f5f9;
-            border-top: 1px solid #e2e8f0;
-            margin-top: 40px;
-            width: 100%;
-        }
-    </style>
 </head>
-<body>
+<body class="bg-slate-50 min-h-screen">
 
-    <!-- PHẦN ĐẦU TRANG -->
-    <header>
-        <h1>Cổng Nộp Bài Tập Lập Trình & Khoa Học Dữ Liệu</h1>
-        <p>Môn học: ITA106 | Quản lý, chạy thực nghiệm và đẩy mã nguồn trực tuyến</p>
-    </header>
+    <nav class="bg-indigo-900 text-white shadow-lg p-6">
+        <h1 class="text-2xl font-bold">Portal Quản Lý & Nộp Bài ITA106</h1>
+    </nav>
 
-    <!-- KHU VỰC HIỂN THỊ CHÍNH (ĐÃ FIX TRÀN 100% CHIỀU RỘNG MÀN HÌNH) -->
-    <div class="container">
+    <main class="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
         
-        <!-- CỘT BÊN TRÁI: KHUNG ĐIỀN THÔNG TIN & NHẬP CODE -->
-        <div class="panel">
-            <div class="panel-title">📤 Đẩy Mã Nguồn Nộp Bài</div>
-            
-            <form id="submission-form">
-                <div class="form-group">
-                    <label for="student-name">Họ và tên sinh viên:</label>
-                    <input type="text" id="student-name" placeholder="Ví dụ: Nguyễn Văn A" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="student-id">Mã số sinh viên (MSSV):</label>
-                    <input type="text" id="student-id" placeholder="Ví dụ: PK01234" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="exercise-select">Chọn bài tập nộp:</label>
-                    <select id="exercise-select" onchange="updateCodeTemplate()">
-                        <option value="1">Bài 1: Khám phá dữ liệu ban đầu (2đ)</option>
-                        <option value="2">Bài 2: Làm sạch dữ liệu (2đ)</option>
-                        <option value="3">Bài 3: Phát hiện Outliers dữ liệu (2đ)</option>
-                        <option value="4">Bài 4: Sơ đồ quy trình Pipeline (2đ)</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="code-area">Mã nguồn (Python / JavaScript / HTML):</label>
-                    <textarea id="code-area" class="code-editor" rows="15" required></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="note-area">Ghi chú hoặc phân tích thêm (Nếu có):</label>
-                    <textarea id="note-area" rows="4" placeholder="Nhập các nhận xét về kết quả hoặc thuật toán của bạn vào đây..."></textarea>
-                </div>
-
-                <div class="btn-container">
-                    <button type="submit" class="btn">🚀 Đẩy Code Nộp Bài</button>
-                    <button type="button" class="btn btn-success" onclick="exportToTXT()">💾 Xuất file Báo Cáo (.txt)</button>
-                </div>
-            </form>
-
-            <h4 style="margin-top: 40px; border-top: 2px solid #f1f5f9; padding-top: 25px; color: var(--primary-color);">Lịch sử đẩy code thành công:</h4>
-            <div class="submitted-list" id="log-list">
-                <div class="submitted-item">
-                    <span class="status-badge">Đã đồng bộ</span>
-                    <h5>Bài 1: Khám phá dữ liệu ban đầu</h5>
-                    <p>Người nộp: Hệ thống mẫu | Thời gian: Vừa xong</p>
-                </div>
-            </div>
+        <!-- Sidebar chọn Lab -->
+        <div class="bg-white p-4 rounded-xl shadow-md border-r border-slate-200">
+            <h2 class="font-bold text-lg mb-4">Danh sách Lab (1-8)</h2>
+            <div id="labList" class="space-y-2"></div>
         </div>
 
-        <!-- CỘT BÊN PHẢI: TRÌNH MÔ PHỎNG & ĐỒ THỊ MINH HỌA -->
-        <div class="panel panel-right">
-            <div class="panel-title">📊 Trình Mô Phỏng Kết Quả Toán Học</div>
-            <p style="font-size: 15px; color: #64748b; margin-bottom: 20px;">Trình giả lập này giúp bạn kiểm thử, trực quan hóa dữ liệu tự động cho các bài tập vừa nộp.</p>
+        <!-- Khu vực hiển thị chi tiết theo Lab -->
+        <div class="lg:col-span-3 space-y-6">
             
-            <div style="margin-bottom: 25px;">
-                <button class="btn btn-success" style="width: 100%;" onclick="runSimulation()">Kích hoạt Chạy thử nghiệm thuật toán</button>
+            <!-- Thông tin Lab -->
+            <div class="bg-white p-6 rounded-xl shadow-md border-l-8 border-indigo-700">
+                <h2 id="labHeader" class="text-2xl font-bold text-indigo-900">Vui lòng chọn Lab</h2>
+                <p id="labStatus" class="text-sm text-slate-500 mt-2">Chọn một mục từ danh sách bên trái để tải tệp và nộp code.</p>
             </div>
 
-            <!-- Demo Bài 1 -->
-            <div class="demo-area">
-                <strong>[Xem trước Bài 1] 10 dòng dữ liệu & Thống kê mô tả:</strong>
-                <table>
-                    <thead>
-                        <tr><th>STT</th><th>Diện tích (m²)</th><th>Giá (Tỷ VNĐ)</th><th>Phân loại</th></tr>
-                    </thead>
-                    <tbody id="demo-table-body">
-                        <tr><td>1</td><td>45</td><td>1.5</td><td>Chung cư</td></tr>
-                        <tr><td>2</td><td>60</td><td>2.4</td><td>Nhà phố</td></tr>
-                        <tr><td>3</td><td>120</td><td>6.5</td><td>Biệt thự</td></tr>
-                        <tr><td>4</td><td>300</td><td>28.0</td><td>Biệt thự (Nhiễu)</td></tr>
-                    </tbody>
-                </table>
-                <div style="font-size:13px; margin-top:10px; color:#1e293b; font-weight: 600;" id="demo-stats">
-                    Tính toán tự động: Trung bình Diện tích = 131.25 m² | Giá trung bình = 9.6 Tỷ VNĐ
+            <!-- Khu vực tải file -->
+            <div id="fileZone" class="bg-white p-6 rounded-xl shadow-md hidden">
+                <h3 class="font-bold mb-4">Tệp đính kèm cho Lab này</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="border-2 border-dashed border-slate-300 p-4 rounded-lg text-center">
+                        <p class="text-xs text-slate-500">Tải Slide (Lab này)</p>
+                        <input type="file" class="w-full mt-2 text-xs">
+                    </div>
+                    <div class="border-2 border-dashed border-slate-300 p-4 rounded-lg text-center">
+                        <p class="text-xs text-slate-500">Tải Assessment</p>
+                        <input type="file" class="w-full mt-2 text-xs">
+                    </div>
                 </div>
             </div>
 
-            <!-- Demo Bài 2 & 3 -->
-            <div class="demo-area" id="demo-clean-area" style="display:none;">
-                <strong>[Xem trước Bài 2 & 3] Làm sạch dữ liệu & Phát hiện Outliers:</strong>
-                <p style="font-size:14px; margin-bottom: 15px; color: #16a34a; font-weight: 600; line-height: 1.7;">
-                    ✔ Điền giá trị trung vị cho dữ liệu trống thành công.<br>
-                    ✔ Loại bỏ bản ghi trùng lặp một cách tự động.<br>
-                    ⚠ <b>Cảnh báo bất thường (IQR/Z-score):</b> Dữ liệu căn hộ 300m² có giá 28 Tỷ vượt ngưỡng quy định 1.5*IQR.
-                </p>
-                <div class="chart-box">
-                    <canvas id="demo-chart"></canvas>
+            <!-- Khu vực code từng bài -->
+            <div id="codeZone" class="bg-white p-6 rounded-xl shadow-md hidden">
+                <h3 class="font-bold mb-4">Soạn thảo Code (Bài 1-4)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <textarea id="c1" class="h-24 bg-slate-900 text-emerald-400 p-3 rounded font-mono text-xs" placeholder="Bài 1..."></textarea>
+                    <textarea id="c2" class="h-24 bg-slate-900 text-emerald-400 p-3 rounded font-mono text-xs" placeholder="Bài 2..."></textarea>
+                    <textarea id="c3" class="h-24 bg-slate-900 text-emerald-400 p-3 rounded font-mono text-xs" placeholder="Bài 3..."></textarea>
+                    <textarea id="c4" class="h-24 bg-slate-900 text-emerald-400 p-3 rounded font-mono text-xs" placeholder="Bài 4..."></textarea>
                 </div>
-            </div>
-
-            <!-- Demo Bài 4 -->
-            <div class="demo-area">
-                <strong>[Xem trước Bài 4] Sơ đồ Pipeline Khoa học dữ liệu:</strong>
-                <div style="text-align:center; margin-top:15px;">
-                    <svg width="100%" height="70" viewBox="0 0 600 70" style="background:#fff; border:1px solid #cbd5e1; border-radius:6px;">
-                        <g font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">
-                            <rect x="5" y="15" width="85" height="40" rx="5" fill="#1e293b"/><text x="47.5" y="39">Thu thập</text>
-                            <rect x="105" y="15" width="85" height="40" rx="5" fill="#dc2626"/><text x="147.5" y="39">Làm sạch</text>
-                            <rect x="205" y="15" width="85" height="40" rx="5" fill="#2563eb"/><text x="247.5" y="39">EDA</text>
-                            <rect x="305" y="15" width="85" height="40" rx="5" fill="#ea580c"/><text x="347.5" y="39">Đặc trưng</text>
-                            <rect x="405" y="15" width="85" height="40" rx="5" fill="#16a34a"/><text x="447.5" y="39">Train</text>
-                            <rect x="505" y="15" width="85" height="40" rx="5" fill="#9333ea"/><text x="547.5" y="39">Đánh giá</text>
-                        </g>
-                    </svg>
-                </div>
+                <button onclick="saveData()" class="mt-4 w-full bg-indigo-700 text-white py-2 rounded font-bold">Lưu & Nộp Code</button>
             </div>
         </div>
+    </main>
 
-    </div>
-
-    <!-- CHÂN TRANG -->
-    <footer>
-        <p>Bản quyền phục vụ nộp bài tập môn ITA106 - Đại học FPT © 2026</p>
-    </footer>
-
-    <!-- LOGIC HOẠT ĐỘNG JAVASCRIPT -->
     <script>
-        // Mẫu code tự động nạp cho từng bài tập để nộp nhanh
-        const codeTemplates = {
-            "1": `# BÀI 1: KHÁM PHÁ DỮ LIỆU BAN ĐẦU\\nimport pandas as pd\\nimport numpy as np\\n\\n# Đọc file dữ liệu thô\\ndf = pd.read_csv("data.csv")\\n\\n# 1. Hiển thị 10 dòng đầu\\nprint("10 dòng dữ liệu đầu tiên:")\\nprint(df.head(10))\\n\\n# 2. Đếm số lượng dòng, cột\\nprint(f"Kích thước file: {df.shape}")\\n\\n# 3. Phân tích thống kê mô tả\\nprint("Thông số thống kê cơ bản:")\\nprint(df.describe())`,
-            "2": `# BÀI 2: LÀM SẠCH DỮ LIỆU\\nimport pandas as pd\\n\\ndf = pd.read_csv("data.csv")\\n\\n# Điền giá trị trung vị vào ô trống cột Price\\ndf['price'] = df['price'].fillna(df['price'].median())\\n\\n# Loại bỏ các dòng bị trùng lặp\\ndf = df.drop_duplicates()\\n\\nprint("Dữ liệu sau khi làm sạch thành công:")\\nprint(df.info())`,
-            "3": `# BÀI 3: PHÁT HIỆN BIẾN ĐỘNG BẤT THƯỜNG (OUTLIERS)\\nimport numpy as np\\n\\nq1 = df['price'].quantile(0.25)\\nq3 = df['price'].quantile(0.75)\\niqr = q3 - q1\\n\\nlower_bound = q1 - 1.5 * iqr\\nupper_bound = q3 + 1.5 * iqr\\n\\noutliers = df[(df['price'] < lower_bound) | (df['price'] > upper_bound)]\\nprint(f"Số lượng bản ghi bị nghi là Outliers: {len(outliers)}")`,
-            "4": `# BÀI 4: THIẾT KẾ SƠ ĐỒ QUY TRÌNH KHOA HỌC DỮ LIỆU PIPELINE\\ndef run_data_pipeline():\\n    print("Step 1: Thu thập dữ liệu")\\n    print("Step 2: Làm sạch dữ liệu")\\n    print("Step 3: Khám phá dữ liệu EDA")\\n    print("Step 4: Trích xuất đặc trưng")\\n    print("Step 5: Huấn luyện mô hình")\\n    print("Step 6: Đánh giá mô hình")\\n\\nrun_data_pipeline()`
-        };
-
-        function updateCodeTemplate() {
-            const select = document.getElementById("exercise-select").value;
-            document.getElementById("code-area").value = codeTemplates[select];
+        const labList = document.getElementById('labList');
+        
+        for(let i=1; i<=8; i++) {
+            const btn = document.createElement('button');
+            btn.className = "w-full text-left px-4 py-2 rounded-lg hover:bg-indigo-100 transition font-medium text-slate-700";
+            btn.innerText = `Lab ${i}`;
+            btn.onclick = () => {
+                document.getElementById('labHeader').innerText = `Thực hành Lab ${i}`;
+                document.getElementById('labStatus').innerText = "Đã tải dữ liệu cấu hình cho Lab này.";
+                document.getElementById('fileZone').classList.remove('hidden');
+                document.getElementById('codeZone').classList.remove('hidden');
+            };
+            labList.appendChild(btn);
         }
 
-        // Tự động nạp code Bài 1 khi vừa mở trang
-        window.onload = function() {
-            updateCodeTemplate();
-        };
-
-        // Nhận diện sự kiện nút nộp bài
-        document.getElementById("submission-form").addEventListener("submit", function(e) {
-            e.preventDefault();
-            const name = document.getElementById("student-name").value;
-            const id = document.getElementById("student-id").value;
-            const exercise = document.getElementById("exercise-select");
-            const exerciseText = exercise.options[exercise.selectedIndex].text;
-
-            const logList = document.getElementById("log-list");
-            const item = document.createElement("div");
-            item.className = "submitted-item";
-            item.innerHTML = `
-                <span class="status-badge" style="background:#dbeafe; color:#1e40af;">Vừa nộp</span>
-                <h5>${exerciseText}</h5>
-                <p>Sinh viên: ${name} (${id}) | Trạng thái: Đã đồng bộ lên hệ thống</p>
-            `;
-            logList.insertBefore(item, logList.firstChild);
-            alert("Chúc mừng! Mã nguồn bài làm của bạn đã được đẩy lên hệ thống thành công!");
-        });
-
-        // Vẽ biểu đồ thực nghiệm
-        let currentChart = null;
-        function runSimulation() {
-            document.getElementById("demo-clean-area").style.display = "block";
-            const ctx = document.getElementById("demo-chart").getContext("2d");
-            if(currentChart) { currentChart.destroy(); }
-
-            currentChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Giá trị thông thường', 'Giá trị dị biệt (Outlier)'],
-                    datasets: [{
-                        label: 'Kết quả phân tích Giá nhà (Tỷ VNĐ)',
-                        data: [2.8, 28.0],
-                        backgroundColor: ['#2563eb', '#dc2626'],
-                        borderRadius: 6
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    }
-                }
-            });
-            alert("Mô phỏng toán học thực thi thành công!");
-        }
-
-        // Xuất file text
-        function exportToTXT() {
-            const name = document.getElementById("student-name").value || "Vo_Danh";
-            const id = document.getElementById("student-id").value || "00000";
-            const code = document.getElementById("code-area").value;
-            const textContent = `BAO CAO BAI TAP MON ITA106\\n-------------------------\\nSinh vien thuc hien: ${name}\\nMSSV: ${id}\\n\\n[MA NGUON BAI LAM CHI TIET]:\\n${code}`;
-            
-            const blob = new Blob([textContent], { type: "text/plain;charset=utf-8" });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = `Baitap_ITA106_${id}.txt`;
-            link.click();
+        function saveData() {
+            alert("Đã lưu nội dung và gửi file đính kèm cho Lab hiện tại!");
         }
     </script>
 </body>
