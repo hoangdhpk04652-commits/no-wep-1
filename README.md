@@ -7,7 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --primary-color: #1e293b;
+          --primary-color: #1e293b;
             --secondary-color: #2563eb;
             --success-color: #16a34a;
             --warning-color: #ea580c;
