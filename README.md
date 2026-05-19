@@ -1,425 +1,216 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ Thống Nộp Bài & Quản Lý Bài Tập ITA106</title>
-    <!-- Nhúng Chart.js qua CDN để hiển thị biểu đồ tự động cho phần minh họa bài tập -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        :root {
-            --primary-color: #1e293b;
-            --secondary-color: #2563eb;
-            --success-color: #16a34a;
-            --warning-color: #ea580c;
-            --danger-color: #dc2626;
-            --bg-color: #f1f5f9;
-            --card-bg: #ffffff;
-            --text-color: #334155;
-        }
+import streamlit as st
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.preprocessing import StandardScaler
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-        }
+# Cấu hình trang web
+st.set_page_config(page_title="Hệ thống Chấm bài ITA106", layout="wide")
+st.title("📊 Hệ thống Nộp bài và Xử lý Dữ liệu tự động (ITA106)")
+st.write("Hãy tải file dữ liệu của bạn lên (định dạng .csv hoặc .xlsx) để hệ thống tự động xử lý 4 bài tập.")
 
-        header {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 30px 20px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
+# Khu vực upload file
+uploaded_file = st.file_uploader("Chọn file dữ liệu", type=["csv", "xlsx"])
 
-        header h1 {
-            margin: 0;
-            font-size: 26px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+if uploaded_file is not None:
+    # Đọc dữ liệu
+    try:
+        if uploaded_file.name.endswith('.csv'):
+            df = pd.read_csv(uploaded_file)
+        else:
+            df = pd.read_excel(uploaded_file)
+        st.success("Tải dữ liệu lên thành công!")
+    except Exception as e:
+        st.error(f"Lỗi khi đọc file: {e}")
+        st.stop()
 
-        header p {
-            margin: 8px 0 0 0;
-            opacity: 0.8;
-            font-size: 15px;
-        }
+    # Tạo các Tab tương ứng với 4 bài tập
+    tab1, tab2, tab3, tab4 = st.tabs(["Bài 1: Khám phá", "Bài 2: Làm sạch", "Bài 3: Outliers", "Bài 4: Sơ đồ quy trình"])
 
-        .container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-        }
-
-        @media (max-width: 900px) {
-            .container {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .panel {
-            background-color: var(--card-bg);
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            padding: 25px;
-            box-sizing: border-box;
-        }
-
-        .panel-title {
-            margin-top: 0;
-            color: var(--primary-color);
-            border-bottom: 2px solid #e2e8f0;
-            padding-bottom: 12px;
-            font-size: 20px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* Form styling */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 6px;
-            font-size: 14px;
-            color: #475569;
-        }
-
-        .form-group select, 
-        .form-group input, 
-        .form-group textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            font-size: 14px;
-            font-family: inherit;
-            box-sizing: border-box;
-            outline: none;
-        }
-
-        .form-group select:focus, 
-        .form-group input:focus, 
-        .form-group textarea:focus {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-
-        .code-editor {
-            font-family: 'Courier New', Courier, monospace;
-            background-color: #0f172a;
-            color: #38bdf8;
-            padding: 15px;
-            min-height: 200px;
-            resize: vertical;
-        }
-
-        .btn {
-            background-color: var(--secondary-color);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            font-size: 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
-        }
-
-        .btn-success { background-color: var(--success-color); }
-
-        /* Danh sách bài tập đã nộp */
-        .submitted-list {
-            margin-top: 20px;
-        }
-
-        .submitted-item {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 6px;
-            padding: 15px;
-            margin-bottom: 12px;
-            position: relative;
-        }
-
-        .submitted-item h5 {
-            margin: 0 0 5px 0;
-            font-size: 15px;
-            color: var(--primary-color);
-        }
-
-        .submitted-item p {
-            margin: 0;
-            font-size: 13px;
-            color: #64748b;
-        }
-
-        .status-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: #dcfce7;
-            color: #15803d;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        /* Bảng & biểu đồ phần demo */
-        .demo-area {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f8fafc;
-            border-radius: 8px;
-            border: 1px dashed #cbd5e1;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-            margin-top: 10px;
-        }
-
-        th, td {
-            padding: 8px;
-            border-bottom: 1px solid #e2e8f0;
-            text-align: left;
-        }
-
-        th { background: #f1f5f9; }
-
-        .chart-box {
-            height: 180px;
-            margin-top: 15px;
-        }
-    </style>
-</head>
-<body>
-
-    <header>
-        <h1>Cổng Nộp Bài Tập Lập Trình & Khoa Học Dữ Liệu</h1>
-        <p>Môn học: ITA106 | Quản lý, chạy thực nghiệm và đẩy mã nguồn trực tuyến</p>
-    </header>
-
-    <div class="container">
+    # ==========================================
+    # BÀI 1: KHÁM PHÁ DỮ LIỆU BAN ĐẦU
+    # ==========================================
+    with tab1:
+        st.header("Bài 1: Khám phá dữ liệu ban đầu (2đ)")
         
-        <!-- BÊN TRÁI: GIAO DIỆN ĐẨY CODE VÀ NỘP BÀI -->
-        <div class="panel">
-            <div class="panel-title">📤 Đẩy Mã Nguồn Nộp Bài</div>
+        st.subheader("1. Hiển thị 10 dòng dữ liệu đầu tiên")
+        st.dataframe(df.head(10))
+        
+        st.subheader("2. Kiểm tra số lượng bản ghi và thuộc tính")
+        st.write(f"- Số lượng bản ghi (dòng): **{df.shape[0]}**")
+        st.write(f"- Số lượng thuộc tính (cột): **{df.shape[1]}**")
+        
+        st.subheader("3. Kiểm tra kiểu dữ liệu của từng cột")
+        dtype_df = pd.DataFrame(df.dtypes, columns=["Kiểu dữ liệu"]).astype(str)
+        st.dataframe(dtype_df)
+        
+        st.subheader("4. Tính toán các thống kê cơ bản")
+        st.write("Bao gồm: Giá trị trung bình, Max, Min, Độ lệch chuẩn (chỉ áp dụng cho cột số)")
+        st.dataframe(df.describe().T[['mean', 'max', 'min', 'std']])
+        
+        st.subheader("5. Trực quan hóa dữ liệu bằng các biểu đồ")
+        num_cols = df.select_dtypes(include=[np.number]).columns.tolist()
+        cat_cols = df.select_dtypes(exclude=[np.number]).columns.tolist()
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            st.write("**Histogram cho các thuộc tính số:**")
+            if num_cols:
+                selected_num = st.selectbox("Chọn cột số để vẽ Histogram", num_cols, key="hist")
+                fig, ax = plt.subplots()
+                sns.histplot(df[selected_num].dropna(), kde=True, ax=ax, color='skyblue')
+                st.pyplot(fig)
+            else:
+                st.warning("Không có thuộc tính số nào.")
+                
+        with col2:
+            st.write("**Bar chart cho các thuộc tính phân loại:**")
+            if cat_cols:
+                selected_cat = st.selectbox("Chọn cột phân loại để vẽ Bar chart", cat_cols, key="bar")
+                fig, ax = plt.subplots()
+                # Giới hạn top 10 giá trị phổ biến nhất để tránh rối biểu đồ
+                df[selected_cat].value_counts().head(10).plot(kind='bar', ax=ax, color='salmon')
+                plt.xticks(rotation=45)
+                st.pyplot(fig)
+            else:
+                st.warning("Không có thuộc tính phân loại nào.")
+
+    # ==========================================
+    # BÀI 2: LÀM SẠCH DỮ LIỆU
+    # ==========================================
+    with tab2:
+        st.header("Bài 2: Làm sạch dữ liệu (2đ)")
+        
+        st.subheader("1. Kiểm tra dữ liệu bị thiếu (Missing Values)")
+        missing_count = df.isnull().sum()
+        st.dataframe(pd.DataFrame(missing_count, columns=["Số lượng giá trị thiếu"]))
+        
+        st.subheader("2. Xử lý dữ liệu thiếu và trùng lặp")
+        method = st.radio("Chọn phương pháp xử lý dữ liệu thiếu:", 
+                          ("Giữ nguyên để test", "Xóa bản ghi chứa giá trị thiếu", "Điền giá trị trung bình/trung vị (cho cột số)"))
+        
+        df_cleaned = df.copy()
+        if method == "Xóa bản ghi chứa giá trị thiếu":
+            df_cleaned = df_cleaned.dropna()
+            st.caption(f"Đã xóa. Số bản ghi còn lại: {df_cleaned.shape[0]}")
+        elif method == "Điền giá trị trung bình/trung vị (cho cột số)":
+            for col in num_cols:
+                df_cleaned[col] = df_cleaned[col].fillna(df_cleaned[col].median())
+            st.caption("Đã điền giá trị Trung vị (Median) vào các cột số bị thiếu.")
             
-            <form id="submission-form">
-                <div class="form-group">
-                    <label for="student-name">Họ và tên sinh viên:</label>
-                    <input type="text" id="student-name" placeholder="Ví dụ: Nguyễn Văn A" required>
-                </div>
+        # Loại bỏ trùng lặp
+        dup_count = df_cleaned.duplicated().sum()
+        st.write(f"- Phát hiện số bản ghi trùng lặp: **{dup_count}**")
+        if dup_count > 0:
+            df_cleaned = df_cleaned.drop_duplicates()
+            st.success("Đã loại bỏ các bản ghi trùng lặp!")
 
-                <div class="form-group">
-                    <label for="student-id">Mã số sinh viên (MSSV):</label>
-                    <input type="text" id="student-id" placeholder="Ví dụ: PK01234" required>
-                </div>
+        st.subheader("3. Chuẩn hóa dữ liệu số (Standardization)")
+        if num_cols:
+            scaler = StandardScaler()
+            df_scaled = df_cleaned.copy()
+            df_scaled[num_cols] = scaler.fit_transform(df_cleaned[num_cols].fillna(0)) # Điền tạm 0 để scale nếu chưa xử lý hết
+            st.write("Dữ liệu sau khi Chuẩn hóa (Z-score Standardization) 5 dòng đầu:")
+            st.dataframe(df_scaled[num_cols].head())
+        
+        st.subheader("4. Vẽ Boxplot so sánh TRƯỚC và SAU khi làm sạch")
+        if num_cols:
+            selected_box = st.selectbox("Chọn cột số để so sánh Boxplot", num_cols, key="box_clean")
+            fig, axes = plt.subplots(1, 2, figsize=(10, 4))
+            sns.boxplot(y=df[selected_box], ax=axes[0], color='lightcoral')
+            axes[0].set_title("Trước khi làm sạch (Ban đầu)")
+            
+            sns.boxplot(y=df_cleaned[selected_box], ax=axes[1], color='lightgreen')
+            axes[1].set_title("Sau khi làm sạch/Xử lý thiếu")
+            st.pyplot(fig)
 
-                <div class="form-group">
-                    <label for="exercise-select">Chọn bài tập nộp:</label>
-                    <select id="exercise-select" onchange="updateCodeTemplate()">
-                        <option value="1">Bài 1: Khám phá dữ liệu ban đầu (2đ)</option>
-                        <option value="2">Bài 2: Làm sạch dữ liệu (2đ)</option>
-                        <option value="3">Bài 3: Phát hiện Outliers dữ liệu (2đ)</option>
-                        <option value="4">Bài 4: Sơ đồ quy trình Pipeline (2đ)</option>
-                    </select>
-                </div>
+    # ==========================================
+    # BÀI 3: PHÁT HIỆN OUTLIERS
+    # ==========================================
+    with tab3:
+        st.header("Bài 3: Phát hiện Outliers trong dữ liệu (2đ)")
+        if num_cols:
+            col_outlier = st.selectbox("Chọn cột số cần phân tích Outliers", num_cols, key="outlier_col")
+            
+            # Tính IQR
+            Q1 = df_cleaned[col_outlier].quantile(0.25)
+            Q3 = df_cleaned[col_outlier].quantile(0.75)
+            IQR = Q3 - Q1
+            lower_bound = Q1 - 1.5 * IQR
+            upper_bound = Q3 + 1.5 * IQR
+            outliers_iqr = df_cleaned[(df_cleaned[col_outlier] < lower_bound) | (df_cleaned[col_outlier] > upper_bound)]
+            
+            # Tính Z-score
+            mean_val = df_cleaned[col_outlier].mean()
+            std_val = df_cleaned[col_outlier].std()
+            z_scores = (df_cleaned[col_outlier] - mean_val) / std_val
+            outliers_z = df_cleaned[np.abs(z_scores) > 3]
+            
+            st.subheader("1. Kết quả áp dụng phương pháp IQR & Z-score")
+            st.write(f"- **Phương pháp IQR:** Phát hiện **{len(outliers_iqr)}** dòng dữ liệu ngoại lai.")
+            st.write(f"- **Phương pháp Z-score (ngưỡng |z| > 3):** Phát hiện **{len(outliers_z)}** dòng dữ liệu bất thường.")
+            
+            st.subheader("2. Vẽ biểu đồ phân tích")
+            col_b3_1, col_b3_2 = st.columns(2)
+            with col_b3_1:
+                st.write("**Boxplot phát hiện dị biệt:**")
+                fig, ax = plt.subplots()
+                sns.boxplot(x=df_cleaned[col_outlier], ax=ax, color='gold')
+                st.pyplot(fig)
+            with col_b3_2:
+                st.write("**Scatter Plot (Biểu đồ phân tán):**")
+                if len(num_cols) > 1:
+                    # Chọn thêm 1 cột nữa để vẽ scatter
+                    other_cols = [c for c in num_cols if c != col_outlier]
+                    y_axis = st.selectbox("Chọn trục Y cho Scatter plot", other_cols)
+                    fig, ax = plt.subplots()
+                    sns.scatterplot(data=df_cleaned, x=col_outlier, y=y_axis, ax=ax, color='purple')
+                    st.pyplot(fig)
+                else:
+                    st.info("Cần ít nhất 2 cột số để vẽ Scatter Plot.")
+                    
+            st.subheader("3. Phân tích ảnh hưởng của Outliers đối với mô hình Học máy")
+            st.info("""
+            > **💡 Đánh giá lý thuyết:**
+            > * **Thuật toán nhạy cảm với Outliers:** Các mô hình tuyến tính (Linear/Logistic Regression), K-Means, KNN sẽ bị lệch nghiêm trọng do Outliers làm thay đổi khoảng cách và hàm mất mát (MSE).
+            > * **Thuật toán ít nhạy cảm:** Các mô hình dựa trên cây quyết định (Decision Tree, Random Forest, XGBoost) xử lý dữ liệu dựa trên việc phân ngưỡng (split), do đó ít bị ảnh hưởng bởi giá trị cực đoan hơn.
+            """)
+        else:
+            st.warning("Vui lòng tải dữ liệu có chứa cột số để phân tích Outliers.")
 
-                <div class="form-group">
-                    <label for="code-area">Mã nguồn (Python / JavaScript / HTML):</label>
-                    <textarea id="code-area" class="code-editor" rows="12" required></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="note-area">Ghi chú hoặc phân tích thêm (Nếu có):</label>
-                    <textarea id="note-area" rows="3" placeholder="Nhập các nhận xét về kết quả hoặc thuật toán vào đây..."></textarea>
-                </div>
-
-                <button type="submit" class="btn">🚀 Đẩy Code Nộp Bài</button>
-                <button type="button" class="btn btn-success" onclick="exportToTXT()" style="margin-left: 10px;">💾 Xuất file Báo Cáo</button>
-            </form>
-
-            <h4 style="margin-top: 30px; border-top: 1px solid #e2e8f0; padding-top: 15px;">Lịch sử đẩy code thành công:</h4>
-            <div class="submitted-list" id="log-list">
-                <!-- Các bài nộp sẽ hiển thị ở đây -->
-                <div class="submitted-item">
-                    <span class="status-badge">Đã đồng bộ</span>
-                    <h5>Bài 1: Khám phá dữ liệu ban đầu</h5>
-                    <p>Người nộp: Hệ thống mẫu | Thời gian: Vừa xong</p>
-                </div>
+    # ==========================================
+    # BÀI 4: THIẾT KẾ SƠ ĐỒ QUY TRÌNH
+    # ==========================================
+    with tab4:
+        st.header("Bài 4: Thiết kế sơ đồ thể hiện các bước (2đ)")
+        st.write("Sơ đồ luồng xử lý dữ liệu chuẩn trong Khoa học dữ liệu (Data Science Pipeline):")
+        
+        # Tạo sơ đồ trực quan bằng Markdown / HTML kiểu Graph
+        st.markdown("""
+        <div style="background-color: #f0f2f6; padding: 20px; border-radius: 10px; font-family: sans-serif;">
+            <div style="text-align: center; font-weight: bold; padding: 10px; background: #ff4b4b; color: white; border-radius: 5px; margin-bottom: 10px;">
+                1. THU THẬP DỮ LIỆU (Data Collection)
+            </div>
+            <div style="text-align: center; font-size: 20px;">⬇️</div>
+            <div style="text-align: center; font-weight: bold; padding: 10px; background: #00a65a; color: white; border-radius: 5px; margin-bottom: 10px;">
+                2. LÀM SẠCH DỮ LIỆU (Data Cleaning) <br><small>(Xử lý missing, loại trùng, chuẩn hóa, sửa lỗi)</small>
+            </div>
+            <div style="text-align: center; font-size: 20px;">⬇️</div>
+            <div style="text-align: center; font-weight: bold; padding: 10px; background: #00c0ef; color: white; border-radius: 5px; margin-bottom: 10px;">
+                3. KHÁM PHÁ DỮ LIỆU (EDA) <br><small>(Thống kê, vẽ biểu đồ Histogram, Bar chart, tìm insight)</small>
+            </div>
+            <div style="text-align: center; font-size: 20px;">⬇️</div>
+            <div style="text-align: center; font-weight: bold; padding: 10px; background: #f39c12; color: white; border-radius: 5px; margin-bottom: 10px;">
+                4. TRÍCH XUẤT ĐẶC TRƯNG (Feature Engineering) <br><small>(Mã hóa, chọn lọc biến, tạo biến mới)</small>
+            </div>
+            <div style="text-align: center; font-size: 20px;">⬇️</div>
+            <div style="text-align: center; font-weight: bold; padding: 10px; background: #605ca8; color: white; border-radius: 5px; margin-bottom: 10px;">
+                5. HUẤN LUYỆN MÔ HÌNH (Model Training) <br><small>(Lựa chọn thuật toán và fit dữ liệu)</small>
+            </div>
+            <div style="text-align: center; font-size: 20px;">⬇️</div>
+            <div style="text-align: center; font-weight: bold; padding: 10px; background: #3c8dbc; color: white; border-radius: 5px;">
+                6. ĐÁNH GIÁ MÔ HÌNH (Model Evaluation) <br><small>(Tính toán Accuracy, R2 score, MSE, MAE,...)</small>
             </div>
         </div>
-
-        <!-- BÊN PHẢI: KHU VỰC KHỞI CHẠY VÀ XEM TRƯỚC KẾT QUẢ THỰC NGHIỆM -->
-        <div class="panel">
-            <div class="panel-title">📊 Trình Mô Phỏng & Kiểm Tra Kết Quả Toán Học</div>
-            <p style="font-size: 14px; color: #64748b;">Trình giả lập này giúp bạn chạy thử nghiệm thuật toán của Bài 1, 2, 3 dựa trên mã nguồn bạn vừa đẩy lên.</p>
-            
-            <div style="margin: 15px 0;">
-                <button class="btn btn-success" onclick="runSimulation()">Kích hoạt Chạy thử nghiệm</button>
-            </div>
-
-            <!-- Kết quả Bài 1 -->
-            <div class="demo-area">
-                <strong>[Xem trước Bài 1] 10 dòng dữ liệu & Thống kê:</strong>
-                <table>
-                    <thead>
-                        <tr><th>STT</th><th>Diện tích (m²)</th><th>Giá (Tỷ)</th><th>Phân loại</th></tr>
-                    </thead>
-                    <tbody id="demo-table-body">
-                        <tr><td>1</td><td>45</td><td>1.5</td><td>Chung cư</td></tr>
-                        <tr><td>2</td><td>60</td><td>2.4</td><td>Nhà phố</td></tr>
-                        <tr><td>3</td><td>120</td><td>6.5</td><td>Biệt thự</td></tr>
-                        <tr><td>4</td><td>300</td><td>28.0</td><td>Biệt thự (Nhiễu)</td></tr>
-                    </tbody>
-                </table>
-                <div style="font-size:12px; margin-top:5px; color:#1e293b;" id="demo-stats">
-                    Trung bình (Mean) Diện tích: 131.25 m² | Giá: 9.6 Tỷ VNĐ
-                </div>
-            </div>
-
-            <!-- Kết quả Bài 2 & 3 -->
-            <div class="demo-area" id="demo-clean-area" style="display:none;">
-                <strong>[Xem trước Bài 2 & 3] Làm sạch dữ liệu & Phát hiện Outliers:</strong>
-                <p style="font-size:13px; margin: 5px 0 0 0; color: #16a34a;">
-                    ✔ Đã tự động điền giá trị trung vị cho phần dữ liệu trống.<br>
-                    ✔ Đã quét loại bỏ 1 dòng trùng lặp hoàn toàn.<br>
-                    ⚠ <b>Phát hiện biến động bất thường (IQR/Z-score):</b> Căn hộ 300m² có Giá 28 Tỷ vượt ngưỡng quy định (Z-score = +3.46).
-                </p>
-                <div class="chart-box">
-                    <canvas id="demo-chart"></canvas>
-                </div>
-            </div>
-
-            <!-- Kết quả Bài 4 -->
-            <div class="demo-area">
-                <strong>[Xem trước Bài 4] Sơ đồ Pipeline Khoa học dữ liệu:</strong>
-                <div style="text-align:center; margin-top:10px;">
-                    <svg width="100%" height="60" viewBox="0 0 600 60" style="background:#fff; border:1px solid #e2e8f0; border-radius:4px;">
-                        <g font-size="10" font-weight="bold" text-anchor="middle" fill="#fff">
-                            <rect x="5" y="15" width="80" height="30" rx="3" fill="#1e293b"/><text x="45" y="33">Thu thập</text>
-                            <rect x="105" y="15" width="80" height="30" rx="3" fill="#dc2626"/><text x="145" y="33">Làm sạch</text>
-                            <rect x="205" y="15" width="80" height="30" rx="3" fill="#2563eb"/><text x="245" y="33">EDA</text>
-                            <rect x="305" y="15" width="80" height="30" rx="3" fill="#ea580c"/><text x="345" y="33">Đặc trưng</text>
-                            <rect x="405" y="15" width="80" height="30" rx="3" fill="#16a34a"/><text x="455" y="33">Huấn luyện</text>
-                            <rect x="505" y="15" width="80" height="30" rx="3" fill="#9333ea"/><text x="545" y="33">Đánh giá</text>
-                        </g>
-                    </svg>
-                </div>
-            </div>
-
-        </div>
-
-    </div>
-
-    <script>
-        // Các mẫu code gợi ý sẵn cho từng bài tập để sinh viên dễ lựa chọn khi bấm chuyển bài
-        const codeTemplates = {
-            "1": `# BÀI 1: KHÁM PHÁ DỮ LIỆU BAN ĐẦU\nimport pandas as pd\n\ndf = pd.read_csv("data.csv")\nprint("10 dòng đầu tiên:")\nprint(df.head(10))\nprint(f"Kích thước file: {df.shape}")\nprint(df.describe())`,
-            "2": `# BÀI 2: LÀM SẠCH DỮ LIỆU\n# Điền giá trị trung vị và loại bỏ bản ghi trùng\ndf['price'] = df['price'].fillna(df['price'].median())\ndf = df.drop_duplicates()\nprint("Dữ liệu sau khi làm sạch:", df.shape)`,
-            "3": `# BÀI 3: PHÁT HIỆN OUTLIERS\nq1 = df['price'].quantile(0.25)\nq3 = df['price'].quantile(0.75)\niqr = q3 - q1\nlower_bound = q1 - 1.5 * iqr\nupper_bound = q3 + 1.5 * iqr\noutliers = df[(df['price'] < lower_bound) | (df['price'] > upper_bound)]\nprint("Số lượng bản ghi bất thường:", len(outliers))`,
-            "4": `# BÀI 4: THIẾT KẾ SƠ ĐỒ QUY TRÌNH KHOA HỌC DỮ LIỆU\n# 1. Thu thập -> 2. Làm sạch -> 3. EDA -> 4. Trích xuất đặc trưng -> 5. Train -> 6. Test\nprint("Pipeline executed successfully!")`
-        };
-
-        // Hàm cập nhật mẫu code khi đổi thẻ select
-        function updateCodeTemplate() {
-            const select = document.getElementById("exercise-select").value;
-            document.getElementById("code-area").value = codeTemplates[select];
-        }
-
-        // Thiết lập mã nguồn ban đầu khi load trang
-        window.onload = function() {
-            updateCodeTemplate();
-        };
-
-        // Xử lý sự kiện bấm nút nộp bài
-        document.getElementById("submission-form").addEventListener("submit", function(e) {
-            e.preventDefault();
-            
-            const name = document.getElementById("student-name").value;
-            const id = document.getElementById("student-id").value;
-            const exercise = document.getElementById("exercise-select");
-            const exerciseText = exercise.options[exercise.selectedIndex].text;
-
-            // Thêm một item mới vào khu vực lịch sử nộp bài
-            const logList = document.getElementById("log-list");
-            const item = document.createElement("div");
-            item.className = "submitted-item";
-            item.innerHTML = `
-                <span class="status-badge" style="background:#dbeafe; color:#1e40af;">Vừa nộp</span>
-                <h5>${exerciseText}</h5>
-                <p>Sinh viên: ${name} (${id}) | Thời gian: Vừa xong</p>
-            `;
-            logList.insertBefore(item, logList.firstChild);
-
-            alert("Đã đẩy code bài tập của bạn lên hệ thống lưu trữ trực tuyến thành công!");
-        });
-
-        // Hàm chạy trình mô phỏng biểu đồ trực quan
-        let currentChart = null;
-        function runSimulation() {
-            document.getElementById("demo-clean-area").style.display = "block";
-            
-            const ctx = document.getElementById("demo-chart").getContext("2d");
-            if(currentChart) { currentChart.destroy(); }
-
-            currentChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Điểm thường', 'Điểm dị biệt (Outlier)'],
-                    datasets: [{
-                        label: 'Phân bố giá trị phân tích dữ liệu',
-                        data: [2.8, 28.0],
-                        backgroundColor: ['#2563eb', '#dc2626']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false
-                }
-            });
-            alert("Trình mô phỏng đã thực thi xong mã nguồn bài tập!");
-        }
-
- // Hàm xuất dữ liệu báo cáo ra file text để lưu trữ nộp bài
-        function exportToTXT() {
-            const name = document.getElementById("student-name").value || "Vo_Danh";
-            const id = document.getElementById("student-id").value || "00000";
-            const code = document.getElementById("code-area").value;
-            
-   const textContent = `BAO CAO BAI TAP ITA106\nSinh vien: ${name}\nMSSV: ${id}\n\n[MA NGUON DA NOP]:\n${code}`;
-            
-   const blob = new Blob([textContent], { type: "text/plain;charset=utf-8" });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = `Baitap_ITA106_${id}.txt`;
-            link.click();
-        }
-    </script>
-</body>
-</html>
-
+        """, unsafe_allow_html=True)
