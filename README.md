@@ -17,7 +17,7 @@
             --text-color: #334155;
         }
 
-        body {
+  body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
@@ -27,7 +27,7 @@
             width: 100%;
         }
 
-        header {
+ header {
             background-color: var(--primary-color);
             color: white;
             padding: 30px 20px;
@@ -37,20 +37,20 @@
             box-sizing: border-box;
         }
 
-        header h1 {
+  header h1 {
             margin: 0;
             font-size: 26px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        header p {
+ header p {
             margin: 8px 0 0 0;
             opacity: 0.8;
             font-size: 15px;
         }
 
-        /* CHỈNH SỬA TẠI ĐÂY: Giãn đều container rộng hết cỡ màn hình (max-width lớn hơn) */
+  /* CHỈNH SỬA TẠI ĐÂY: Giãn đều container rộng hết cỡ màn hình (max-width lớn hơn) */
         .container {
             max-width: 95%; 
             width: 1400px;
@@ -62,13 +62,13 @@
             box-sizing: border-box;
         }
 
-        @media (max-width: 1024px) {
+  @media (max-width: 1024px) {
             .container {
                 grid-template-columns: 1fr; /* Trên màn hình dọc hoặc ipad sẽ xếp chồng gọn gàng */
             }
         }
 
-        .panel {
+.panel {
             background-color: var(--card-bg);
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
@@ -77,7 +77,7 @@
             width: 100%; /* Đảm bảo panel chiếm hết không gian cột */
         }
 
-        .panel-title {
+.panel-title {
             margin-top: 0;
             color: var(--primary-color);
             border-bottom: 2px solid #e2e8f0;
@@ -86,12 +86,12 @@
             font-weight: bold;
         }
 
-        /* Form styling */
+  /* Form styling */
         .form-group {
             margin-bottom: 20px;
         }
 
-        .form-group label {
+.form-group label {
             display: block;
             font-weight: 600;
             margin-bottom: 6px;
@@ -99,7 +99,7 @@
             color: #475569;
         }
 
-        .form-group select, 
+ .form-group select, 
         .form-group input, 
         .form-group textarea {
             width: 100%;
@@ -112,14 +112,14 @@
             outline: none;
         }
 
-        .form-group select:focus, 
+ .form-group select:focus, 
         .form-group input:focus, 
         .form-group textarea:focus {
             border-color: var(--secondary-color);
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
-        .code-editor {
+  .code-editor {
             font-family: 'Courier New', Courier, monospace;
             background-color: #0f172a;
             color: #38bdf8;
@@ -128,7 +128,7 @@
             resize: vertical;
         }
 
-        .btn {
+ .btn {
             background-color: var(--secondary-color);
             color: white;
             border: none;
@@ -140,16 +140,16 @@
             transition: all 0.2s;
         }
 
-        .btn:hover {
+ .btn:hover {
             opacity: 0.9;
             transform: translateY(-1px);
         }
 
-        .btn-success { background-color: var(--success-color); }
+ .btn-success { background-color: var(--success-color); }
 
-        .submitted-list { margin-top: 20px; }
+ .submitted-list { margin-top: 20px; }
 
-        .submitted-item {
+ .submitted-item {
             background: #f8fafc;
             border: 1px solid #e2e8f0;
             border-radius: 6px;
@@ -158,7 +158,7 @@
             position: relative;
         }
 
-        .status-badge {
+ .status-badge {
             position: absolute;
             top: 15px;
             right: 15px;
@@ -170,7 +170,7 @@
             font-weight: bold;
         }
 
-        .demo-area {
+ .demo-area {
             margin-top: 20px;
             padding: 15px;
             background: #f8fafc;
@@ -178,22 +178,22 @@
             border: 1px dashed #cbd5e1;
         }
 
-        table {
+ table {
             width: 100%;
             border-collapse: collapse;
             font-size: 13px;
             margin-top: 10px;
         }
 
-        th, td {
+ th, td {
             padding: 10px;
             border-bottom: 1px solid #e2e8f0;
             text-align: left;
         }
 
-        th { background: #f1f5f9; }
+  th { background: #f1f5f9; }
 
-        .chart-box {
+ .chart-box {
             height: 200px;
             margin-top: 15px;
         }
@@ -201,28 +201,28 @@
 </head>
 <body>
 
-    <header>
+  <header>
         <h1>Cổng Nộp Bài Tập Lập Trình & Khoa Học Dữ Liệu</h1>
         <p>Môn học: ITA106 | Quản lý, chạy thực nghiệm và đẩy mã nguồn trực tuyến</p>
     </header>
 
-    <div class="container">
+<div class="container">
         
-        <div class="panel">
+ <div class="panel">
             <div class="panel-title">📤 Đẩy Mã Nguồn Nộp Bài</div>
             
-            <form id="submission-form">
+ <form id="submission-form">
                 <div class="form-group">
                     <label for="student-name">Họ và tên sinh viên:</label>
                     <input type="text" id="student-name" placeholder="Ví dụ: Nguyễn Văn A" required>
                 </div>
 
-                <div class="form-group">
+  <div class="form-group">
                     <label for="student-id">Mã số sinh viên (MSSV):</label>
                     <input type="text" id="student-id" placeholder="Ví dụ: PK01234" required>
                 </div>
 
-                <div class="form-group">
+ <div class="form-group">
                     <label for="exercise-select">Chọn bài tập nộp:</label>
                     <select id="exercise-select" onchange="updateCodeTemplate()">
                         <option value="1">Bài 1: Khám phá dữ liệu ban đầu (2đ)</option>
@@ -232,21 +232,20 @@
                     </select>
                 </div>
 
-                <div class="form-group">
+ <div class="form-group">
                     <label for="code-area">Mã nguồn (Python / JavaScript / HTML):</label>
                     <textarea id="code-area" class="code-editor" rows="12" required></textarea>
                 </div>
 
-                <div class="form-group">
+ <div class="form-group">
                     <label for="note-area">Ghi chú hoặc phân tích thêm (Nếu có):</label>
                     <textarea id="note-area" rows="3" placeholder="Nhập các nhận xét về kết quả hoặc thuật toán vào đây..."></textarea>
                 </div>
-
-                <button type="submit" class="btn">🚀 Đẩy Code Nộp Bài</button>
+    <button type="submit" class="btn">🚀 Đẩy Code Nộp Bài</button>
                 <button type="button" class="btn btn-success" onclick="exportToTXT()" style="margin-left: 10px;">💾 Xuất file Báo Cáo</button>
             </form>
 
-            <h4 style="margin-top: 30px; border-top: 1px solid #e2e8f0; padding-top: 15px;">Lịch sử đẩy code thành công:</h4>
+ <h4 style="margin-top: 30px; border-top: 1px solid #e2e8f0; padding-top: 15px;">Lịch sử đẩy code thành công:</h4>
             <div class="submitted-list" id="log-list">
                 <div class="submitted-item">
                     <span class="status-badge">Đã đồng bộ</span>
@@ -256,15 +255,15 @@
             </div>
         </div>
 
-        <div class="panel">
+  <div class="panel">
             <div class="panel-title">📊 Trình Mô Phỏng & Kiểm Tra Kết Quả Toán Học</div>
             <p style="font-size: 14px; color: #64748b;">Trình giả lập này giúp bạn chạy thử nghiệm thuật toán của Bài 1, 2, 3 dựa trên mã nguồn bạn vừa đẩy lên.</p>
             
-            <div style="margin: 15px 0;">
+  <div style="margin: 15px 0;">
                 <button class="btn btn-success" onclick="runSimulation()">Kích hoạt Chạy thử nghiệm</button>
             </div>
 
-            <div class="demo-area">
+ <div class="demo-area">
                 <strong>[Xem trước Bài 1] 10 dòng dữ liệu & Thống kê:</strong>
                 <table>
                     <thead>
@@ -282,7 +281,7 @@
                 </div>
             </div>
 
-            <div class="demo-area" id="demo-clean-area" style="display:none;">
+  <div class="demo-area" id="demo-clean-area" style="display:none;">
                 <strong>[Xem trước Bài 2 & 3] Làm sạch dữ liệu & Phát hiện Outliers:</strong>
                 <p style="font-size:13px; margin: 5px 0 0 0; color: #16a34a;">
                     ✔ Đã tự động điền giá trị trung vị cho phần dữ liệu trống.<br>
@@ -294,7 +293,7 @@
                 </div>
             </div>
 
-            <div class="demo-area">
+  <div class="demo-area">
                 <strong>[Xem trước Bài 4] Sơ đồ Pipeline Khoa học dữ liệu:</strong>
                 <div style="text-align:center; margin-top:10px;">
                     <svg width="100%" height="60" viewBox="0 0 600 60" style="background:#fff; border:1px solid #e2e8f0; border-radius:4px;">
@@ -311,9 +310,9 @@
             </div>
         </div>
 
-    </div>
+   </div>
 
-    <script>
+ <script>
         const codeTemplates = {
             "1": `# BÀI 1: KHÁM PHÁ DỮ LIỆU BAN ĐẦU\\nimport pandas as pd\\n\\ndf = pd.read_csv("data.csv")\\nprint("10 dòng đầu tiên:")\\nprint(df.head(10))\\nprint(f"Kích thước file: {df.shape}")\\nprint(df.describe())`,
             "2": `# BÀI 2: LÀM SẠCH DỮ LIỆU\\n# Điền giá trị trung vị và loại bỏ bản ghi trùng\\ndf['price'] = df['price'].fillna(df['price'].median())\\ndf = df.drop_duplicates()\\nprint("Dữ liệu sau khi làm sạch:", df.shape)`,
