@@ -5,19 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ITA106 - Future Data Lab</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
-        body {
-            background: radial-gradient(circle at center, #1e1b4b 0%, #0f172a 100%);
-            color: #e2e8f0;
-        }
-        .glass-panel {
-            background: rgba(30, 41, 59, 0.6);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .neon-text {
-            text-shadow: 0 0 10px rgba(99, 102, 241, 0.8);
-        }
+        body { background: radial-gradient(circle at center, #1e1b4b 0%, #0f172a 100%); color: #e2e8f0; }
+        .glass-panel { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .neon-text { text-shadow: 0 0 10px rgba(99, 102, 241, 0.8); }
     </style>
 </head>
 <body class="min-h-screen">
@@ -28,7 +21,6 @@
     </nav>
 
     <main class="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
-        
         <div class="glass-panel p-4 rounded-2xl">
             <h2 class="font-bold text-lg mb-4 text-cyan-400">Lab Sequence (1-8)</h2>
             <div id="labList" class="space-y-2"></div>
@@ -38,105 +30,89 @@
             <div id="mainContent" class="hidden space-y-6">
                 <div class="glass-panel p-8 rounded-2xl border-l-4 border-cyan-400">
                     <h2 id="labHeader" class="text-4xl font-black text-white neon-text">Lab 1</h2>
-                    <p class="text-cyan-200/70 mt-2 font-mono italic">Đang tải mô-đun thực hành...</p>
                 </div>
 
+                <!-- CSV Visualization -->
                 <div class="glass-panel p-6 rounded-2xl">
-                    <h3 class="font-bold text-lg mb-4 text-cyan-400">Data Modules</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div class="border border-purple-500/30 bg-purple-950/20 p-6 rounded-xl text-center hover:bg-purple-900/40 transition">
-                            <label class="cursor-pointer block"><span class="text-xs font-semibold uppercase">Lý thuyết</span><input type="file" id="theoryInput" class="hidden" onchange="handleFile(event, 'theory')"></label>
-                            <div id="theoryPreview" class="mt-2 text-[10px] text-purple-300 font-mono truncate"></div>
-                            <a id="theoryLink" href="#" target="_blank" class="hidden mt-2 inline-block bg-purple-600 text-white px-3 py-1 rounded-full text-[10px] font-bold">MỞ FILE</a>
-                        </div>
-                        <div class="border border-indigo-500/30 bg-indigo-950/20 p-6 rounded-xl text-center hover:bg-indigo-900/40 transition">
-                            <label class="cursor-pointer block"><span class="text-xs font-semibold uppercase">Slide Lab</span><input type="file" id="slideInput" class="hidden" onchange="handleFile(event, 'slide')"></label>
-                            <div id="slidePreview" class="mt-2 text-[10px] text-indigo-300 font-mono truncate"></div>
-                            <a id="slideLink" href="#" target="_blank" class="hidden mt-2 inline-block bg-indigo-600 text-white px-3 py-1 rounded-full text-[10px] font-bold">MỞ FILE</a>
-                        </div>
-                        <div class="border border-blue-500/30 bg-blue-950/20 p-6 rounded-xl text-center hover:bg-blue-900/40 transition">
-                            <label class="cursor-pointer block"><span class="text-xs font-semibold uppercase">Assessment</span><input type="file" id="assessInput" class="hidden" onchange="handleFile(event, 'assess')"></label>
-                            <div id="assessPreview" class="mt-2 text-[10px] text-blue-300 font-mono truncate"></div>
-                            <a id="assessLink" href="#" target="_blank" class="hidden mt-2 inline-block bg-blue-600 text-white px-3 py-1 rounded-full text-[10px] font-bold">MỞ FILE</a>
-                        </div>
+                    <h3 class="font-bold text-lg mb-4 text-emerald-400">Data Visualization Module</h3>
+                    <input type="file" id="csvFile" accept=".csv" class="mb-4 block w-full text-sm text-gray-300">
+                    <div id="columnSelector" class="hidden mb-4 p-2 bg-slate-900 rounded">
+                        <label class="text-xs font-bold text-emerald-400">CHỌN CỘT CSV:</label>
+                        <select id="colSelect" class="bg-slate-800 text-white p-2 rounded ml-2" onchange="updateChartFromCSV()"></select>
+                    </div>
+                    <div class="w-full h-64 bg-slate-950/50 p-4 rounded-xl">
+                        <canvas id="myChart"></canvas>
                     </div>
                 </div>
 
+                <!-- Code Execution -->
                 <div class="glass-panel p-6 rounded-2xl">
                     <h3 class="font-bold text-lg mb-4 text-cyan-400">Code Execution (Python)</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <textarea id="c1" class="h-32 bg-slate-950/50 text-emerald-400 p-4 rounded-xl font-mono text-xs border border-emerald-900 focus:border-emerald-500" placeholder="Bài 1..."></textarea>
-                        <textarea id="c2" class="h-32 bg-slate-950/50 text-emerald-400 p-4 rounded-xl font-mono text-xs border border-emerald-900 focus:border-emerald-500" placeholder="Bài 2..."></textarea>
-                        <textarea id="c3" class="h-32 bg-slate-950/50 text-emerald-400 p-4 rounded-xl font-mono text-xs border border-emerald-900 focus:border-emerald-500" placeholder="Bài 3..."></textarea>
-                        <textarea id="c4" class="h-32 bg-slate-950/50 text-emerald-400 p-4 rounded-xl font-mono text-xs border border-emerald-900 focus:border-emerald-500" placeholder="Bài 4..."></textarea>
-                    </div>
-                    <button onclick="saveData()" class="mt-6 w-full bg-cyan-600 text-slate-950 py-4 rounded-xl font-black hover:bg-cyan-400 transition shadow-[0_0_20px_rgba(34,211,238,0.4)]">SAVE DATA SYNC</button>
+                    <textarea id="c1" class="w-full h-20 bg-slate-950/50 text-emerald-400 p-4 rounded-xl font-mono text-xs border border-emerald-900" placeholder="Nhập dãy số: 10, 20, 30, 40"></textarea>
+                    <button onclick="drawFromCode()" class="mt-4 bg-emerald-600 px-6 py-2 rounded-lg font-bold text-sm hover:bg-emerald-500">VẼ BIỂU ĐỒ TỪ CODE</button>
                 </div>
             </div>
         </div>
     </main>
 
     <script>
-        let currentLab = 1;
-        const labList = document.getElementById('labList');
-        for(let i=1; i<=8; i++) {
-            const btn = document.createElement('button');
-            btn.className = "w-full text-left px-4 py-3 rounded-lg hover:bg-indigo-600/30 transition text-sm font-mono border border-transparent hover:border-indigo-500/50";
-            btn.innerText = `[SESSION_0${i}]`;
-            btn.onclick = () => loadLab(i);
-            labList.appendChild(btn);
+        let myChart = null;
+        let csvData = [];
+
+        // --- Cũ: Vẽ từ CSV ---
+        document.getElementById('csvFile').addEventListener('change', function(e) {
+            Papa.parse(e.target.files[0], {
+                header: true, skipEmptyLines: true,
+                complete: function(results) {
+                    csvData = results.data;
+                    const headers = Object.keys(csvData[0]);
+                    const select = document.getElementById('colSelect');
+                    select.innerHTML = headers.map(h => `<option value="${h}">${h}</option>`).join('');
+                    document.getElementById('columnSelector').classList.remove('hidden');
+                    updateChartFromCSV();
+                }
+            });
+        });
+
+        function updateChartFromCSV() {
+            const col = document.getElementById('colSelect').value;
+            renderChart(csvData.map(row => parseFloat(row[col]) || 0), `Cột: ${col}`);
+        }
+
+        // --- Mới: Vẽ từ Code ---
+        function drawFromCode() {
+            const codeInput = document.getElementById('c1').value;
+            const data = codeInput.split(',').map(val => parseFloat(val.trim())).filter(val => !isNaN(val));
+            if (data.length > 0) {
+                renderChart(data, "Dữ liệu từ Code");
+            } else {
+                alert("Vui lòng nhập dãy số hợp lệ cách nhau bằng dấu phẩy");
+            }
+        }
+
+        function renderChart(data, label) {
+            const ctx = document.getElementById('myChart').getContext('2d');
+            if (myChart) myChart.destroy();
+            myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.map((_, i) => i + 1),
+                    datasets: [{ label: label, data: data, backgroundColor: '#8b5cf6' }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
         }
 
         function loadLab(id) {
-            currentLab = id;
             document.getElementById('mainContent').classList.remove('hidden');
             document.getElementById('labHeader').innerText = `Lab Session 0${id}`;
-            document.getElementById('c1').value = localStorage.getItem(`lab${id}_c1`) || "";
-            document.getElementById('c2').value = localStorage.getItem(`lab${id}_c2`) || "";
-            document.getElementById('c3').value = localStorage.getItem(`lab${id}_c3`) || "";
-            document.getElementById('c4').value = localStorage.getItem(`lab${id}_c4`) || "";
-            loadFileInfo(id, 'theory');
-            loadFileInfo(id, 'slide');
-            loadFileInfo(id, 'assess');
         }
-
-        function loadFileInfo(labId, type) {
-            const sName = localStorage.getItem(`lab${labId}_${type}Name`);
-            const sUrl = localStorage.getItem(`lab${labId}_${type}Url`);
-            if(sName && sUrl) {
-                document.getElementById(`${type}Preview`).innerText = sName;
-                const link = document.getElementById(`${type}Link`);
-                link.href = sUrl;
-                link.classList.remove('hidden');
-            } else {
-                document.getElementById(`${type}Preview`).innerText = "";
-                document.getElementById(`${type}Link`).classList.add('hidden');
-            }
-        }
-
-        function saveData() {
-            localStorage.setItem(`lab${currentLab}_c1`, document.getElementById('c1').value);
-            localStorage.setItem(`lab${currentLab}_c2`, document.getElementById('c2').value);
-            localStorage.setItem(`lab${currentLab}_c3`, document.getElementById('c3').value);
-            localStorage.setItem(`lab${currentLab}_c4`, document.getElementById('c4').value);
-            alert(`Sync Successful: Session 0${currentLab}`);
-        }
-
-        function handleFile(event, type) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const url = e.target.result;
-                    document.getElementById(`${type}Preview`).innerText = file.name;
-                    const link = document.getElementById(`${type}Link`);
-                    link.href = url;
-                    link.classList.remove('hidden');
-                    localStorage.setItem(`lab${currentLab}_${type}Name`, file.name);
-                    localStorage.setItem(`lab${currentLab}_${type}Url`, url);
-                };
-                reader.readAsDataURL(file);
-            }
+        for(let i=1; i<=8; i++) {
+            const btn = document.createElement('button');
+            btn.className = "w-full text-left px-4 py-3 rounded-lg hover:bg-indigo-600/30 transition text-sm font-mono border border-transparent";
+            btn.innerText = `[SESSION_0${i}]`;
+            btn.onclick = () => loadLab(i);
+            document.getElementById('labList').appendChild(btn);
         }
     </script>
 </body>
