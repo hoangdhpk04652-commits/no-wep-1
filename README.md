@@ -35,13 +35,25 @@
                 <!-- CSV Visualization -->
                 <div class="glass-panel p-6 rounded-2xl">
                     <h3 class="font-bold text-lg mb-4 text-emerald-400">Data Visualization Module</h3>
-                    <input type="file" id="csvFile" accept=".csv" class="mb-4 block w-full text-sm text-gray-300">
+                    <div class="flex gap-4 mb-4">
+                        <input type="file" id="csvFile" accept=".csv" class="block w-full text-sm text-gray-300">
+                        <select id="chartType" onchange="refreshCurrentChart()" class="bg-slate-800 text-white p-2 rounded">
+                            <option value="bar">Biểu đồ Cột</option>
+                            <option value="line">Biểu đồ Đường</option>
+                        </select>
+                    </div>
+                    
                     <div id="columnSelector" class="hidden mb-4 p-2 bg-slate-900 rounded">
                         <label class="text-xs font-bold text-emerald-400">CHỌN CỘT CSV:</label>
                         <select id="colSelect" class="bg-slate-800 text-white p-2 rounded ml-2" onchange="updateChartFromCSV()"></select>
                     </div>
+
                     <div class="w-full h-64 bg-slate-950/50 p-4 rounded-xl">
                         <canvas id="myChart"></canvas>
+                    </div>
+                    
+                    <div id="statsPanel" class="mt-4 p-4 bg-indigo-950/50 rounded-lg border border-indigo-500/50 text-indigo-200 font-mono text-sm hidden">
+                        Phân tích: <span id="statsValue" class="text-cyan-400 font-bold"></span>
                     </div>
                 </div>
 
@@ -49,7 +61,7 @@
                 <div class="glass-panel p-6 rounded-2xl">
                     <h3 class="font-bold text-lg mb-4 text-cyan-400">Code Execution (Python)</h3>
                     <textarea id="c1" class="w-full h-20 bg-slate-950/50 text-emerald-400 p-4 rounded-xl font-mono text-xs border border-emerald-900" placeholder="Nhập dãy số: 10, 20, 30, 40"></textarea>
-                    <button onclick="drawFromCode()" class="mt-4 bg-emerald-600 px-6 py-2 rounded-lg font-bold text-sm hover:bg-emerald-500">VẼ BIỂU ĐỒ TỪ CODE</button>
+                    <button onclick="drawFromCode()" class="mt-4 bg-emerald-600 px-6 py-2 rounded-lg font-bold text-sm hover:bg-emerald-500 text-white">VẼ BIỂU ĐỒ TỪ CODE</button>
                 </div>
             </div>
         </div>
@@ -58,8 +70,41 @@
     <script>
         let myChart = null;
         let csvData = [];
+        let currentData = [];
+        let currentLabel = "";
 
-        // --- Cũ: Vẽ từ CSV ---
+        function calculateStats(data) {
+            const sorted = data.slice().sort((a, b) => a - b);
+            const q1 = sorted[Math.floor(sorted.length * 0.25)];
+            const q3 = sorted[Math.floor(sorted.length * 0.75)];
+            const mean = data.reduce((a, b) => a + b, 0) / data.length;
+            return { iqr: (q3 - q1).toFixed(2), mean: mean.toFixed(2) };
+        }
+
+        function refreshCurrentChart() {
+            if (currentData.length > 0) renderChart(currentData, currentLabel);
+        }
+
+        function renderChart(data, label) {
+            currentData = data;
+            currentLabel = label;
+            const ctx = document.getElementById('myChart').getContext('2d');
+            if (myChart) myChart.destroy();
+            
+            myChart = new Chart(ctx, {
+                type: document.getElementById('chartType').value,
+                data: {
+                    labels: data.map((_, i) => i + 1),
+                    datasets: [{ label: label, data: data, backgroundColor: '#8b5cf6', borderColor: '#8b5cf6' }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            const stats = calculateStats(data);
+            document.getElementById('statsPanel').classList.remove('hidden');
+            document.getElementById('statsValue').innerText = `IQR = ${stats.iqr} | Trung bình = ${stats.mean}`;
+        }
+
         document.getElementById('csvFile').addEventListener('change', function(e) {
             Papa.parse(e.target.files[0], {
                 header: true, skipEmptyLines: true,
@@ -76,31 +121,14 @@
 
         function updateChartFromCSV() {
             const col = document.getElementById('colSelect').value;
-            renderChart(csvData.map(row => parseFloat(row[col]) || 0), `Cột: ${col}`);
+            const values = csvData.map(row => parseFloat(row[col]) || 0);
+            renderChart(values, `Cột: ${col}`);
         }
 
-        // --- Mới: Vẽ từ Code ---
         function drawFromCode() {
-            const codeInput = document.getElementById('c1').value;
-            const data = codeInput.split(',').map(val => parseFloat(val.trim())).filter(val => !isNaN(val));
-            if (data.length > 0) {
-                renderChart(data, "Dữ liệu từ Code");
-            } else {
-                alert("Vui lòng nhập dãy số hợp lệ cách nhau bằng dấu phẩy");
-            }
-        }
-
-        function renderChart(data, label) {
-            const ctx = document.getElementById('myChart').getContext('2d');
-            if (myChart) myChart.destroy();
-            myChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: data.map((_, i) => i + 1),
-                    datasets: [{ label: label, data: data, backgroundColor: '#8b5cf6' }]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
+            const data = document.getElementById('c1').value.split(',').map(v => parseFloat(v.trim())).filter(v => !isNaN(v));
+            if (data.length > 0) renderChart(data, "Dữ liệu từ Code");
+            else alert("Vui lòng nhập dãy số hợp lệ");
         }
 
         function loadLab(id) {
