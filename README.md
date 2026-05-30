@@ -11,9 +11,10 @@
         body { background: radial-gradient(circle at center, #1e1b4b 0%, #0f172a 100%); color: #e2e8f0; }
         .glass-panel { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
         .neon-text { text-shadow: 0 0 10px rgba(99, 102, 241, 0.8); }
-        table { border-collapse: collapse; width: 100%; }
+        table { border-collapse: collapse; width: 100%; color: #cbd5e1; }
         th, td { padding: 8px; text-align: left; border: 1px solid #334155; }
-        th { background-color: #1e293b; }
+        th { background-color: #1e293b; color: #38bdf8; }
+        tr:nth-child(even) { background-color: #0f172a; }
     </style>
 </head>
 <body class="min-h-screen">
@@ -31,13 +32,14 @@
         <div class="lg:col-span-3 space-y-6">
             <div id="mainContent" class="hidden space-y-6">
                 <div class="glass-panel p-6 rounded-2xl">
-                    <h3 class="font-bold text-lg mb-4 text-emerald-400">Data Visualization Module</h3>
+                    <h3 id="sessionTitle" class="font-bold text-lg mb-4 text-emerald-400">Data Visualization Module</h3>
                     
                     <div class="flex gap-4 mb-4">
                         <input type="file" id="csvFile" accept=".csv" class="block w-full text-sm text-gray-300">
                     </div>
                     
                     <div id="columnSelector" class="hidden mb-4 p-2 bg-slate-900 rounded">
+                        <label class="text-xs font-bold text-emerald-400 mr-2">Cột hiển thị:</label>
                         <select id="colSelect" class="bg-slate-800 text-white p-2 rounded" onchange="updateChartFromCSV()"></select>
                     </div>
 
@@ -45,14 +47,12 @@
                         <canvas id="myChart"></canvas>
                     </div>
 
-                    <!-- Bảng thống kê -->
                     <div id="statsPanel" class="mb-4 p-4 bg-indigo-950/50 rounded-lg border border-indigo-500/50 text-indigo-200 font-mono text-sm hidden">
                         Phân tích thống kê: <span id="statsValue" class="text-cyan-400 font-bold"></span>
                     </div>
 
-                    <!-- Bảng dữ liệu CSV -->
                     <div id="tableContainer" class="overflow-x-auto bg-slate-900 p-4 rounded-xl text-xs max-h-60 overflow-y-auto">
-                        <h4 class="text-emerald-400 mb-2 font-bold uppercase">Bản dữ liệu CSV (Preview)</h4>
+                        <h4 class="text-emerald-400 mb-2 font-bold uppercase">Dữ liệu CSV (Session Storage)</h4>
                         <table id="csvTable"></table>
                     </div>
                 </div>
@@ -61,6 +61,7 @@
     </main>
 
     <script>
+        let currentSession = null;
         let csvData = [];
         let myChart = null;
 
@@ -74,19 +75,25 @@
         }
 
         document.getElementById('csvFile').addEventListener('change', function(e) {
+            if (!currentSession) return;
             Papa.parse(e.target.files[0], {
                 header: true, skipEmptyLines: true,
                 complete: function(results) {
                     csvData = results.data;
-                    renderTable(csvData);
-                    const headers = Object.keys(csvData[0]);
-                    const select = document.getElementById('colSelect');
-                    select.innerHTML = headers.map(h => `<option value="${h}">${h}</option>`).join('');
-                    document.getElementById('columnSelector').classList.remove('hidden');
-                    updateChartFromCSV();
+                    localStorage.setItem(`data_session_${currentSession}`, JSON.stringify(csvData));
+                    renderUI(csvData);
                 }
             });
         });
+
+        function renderUI(data) {
+            renderTable(data);
+            const headers = Object.keys(data[0]);
+            const select = document.getElementById('colSelect');
+            select.innerHTML = headers.map(h => `<option value="${h}">${h}</option>`).join('');
+            document.getElementById('columnSelector').classList.remove('hidden');
+            updateChartFromCSV();
+        }
 
         function renderTable(data) {
             const table = document.getElementById('csvTable');
@@ -105,7 +112,6 @@
             const col = document.getElementById('colSelect').value;
             const values = csvData.map(row => parseFloat(row[col]) || 0);
             
-            // Cập nhật biểu đồ
             const ctx = document.getElementById('myChart').getContext('2d');
             if (myChart) myChart.destroy();
             myChart = new Chart(ctx, {
@@ -114,15 +120,32 @@
                 options: { responsive: true, maintainAspectRatio: false }
             });
 
-            // Cập nhật thống kê
             const stats = calculateStats(values);
             document.getElementById('statsPanel').classList.remove('hidden');
             document.getElementById('statsValue').innerText = `IQR = ${stats.iqr} | Trung bình = ${stats.mean}`;
         }
 
         function loadLab(id) {
+            currentSession = id;
             document.getElementById('mainContent').classList.remove('hidden');
+            document.getElementById('sessionTitle').innerText = `Lab Session 0${id}`;
+            
+            const savedData = localStorage.getItem(`data_session_${id}`);
+            if (savedData) {
+                csvData = JSON.parse(savedData);
+                renderUI(csvData);
+            } else {
+                csvData = [];
+                document.getElementById('csvTable').innerHTML = '';
+                document.getElementById('columnSelector').classList.add('hidden');
+                document.getElementById('statsPanel').classList.add('hidden');
+                if(myChart) myChart.destroy();
+                // Clear canvas
+                const ctx = document.getElementById('myChart').getContext('2d');
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            }
         }
+
         for(let i=1; i<=8; i++) {
             const btn = document.createElement('button');
             btn.className = "w-full text-left px-4 py-3 rounded-lg hover:bg-indigo-600/30 transition text-sm font-mono";
